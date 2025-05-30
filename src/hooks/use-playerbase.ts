@@ -102,10 +102,6 @@ export function usePlayerbase() {
     }))
   }
 
-  function resetAllPlayers() {
-    setPlayers((prev) => prev.map((p) => ({ ...p, score: 1500 })))
-  }
-
   return {
     players,
     addPlayer,
@@ -113,7 +109,6 @@ export function usePlayerbase() {
     computeResult,
     resetPlayer,
     odds,
-    resetAllPlayers,
     getList,
   }
 }
