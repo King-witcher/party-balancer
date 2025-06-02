@@ -30,7 +30,7 @@ function RouteComponent() {
     return odds(match[0], match[1])
   }, [match, players])
 
-  const selectedPlayers = match.flat().filter((p) => p !== null).length
+  const selectedPlayers = match.flat().filter((p) => p !== null)
 
   function handleChangeSelect(
     teamIndex: number,
@@ -68,7 +68,11 @@ function RouteComponent() {
                 >
                   <option value="">Select player...</option>
                   {Object.values(players).map((p) => (
-                    <option key={p.name} value={p.name}>
+                    <option
+                      disabled={selectedPlayers.includes(p.name)}
+                      key={p.name}
+                      value={p.name}
+                    >
                       [{Math.round(p.score)}] {p.name}
                     </option>
                   ))}
@@ -143,7 +147,7 @@ function RouteComponent() {
           <div
             className="h-full bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-300"
             style={{
-              width: `${blueOdds ? Math.round(blueOdds * 100) : selectedPlayers * 10}%`,
+              width: `${blueOdds ? Math.round(blueOdds * 100) : selectedPlayers.length * 10}%`,
             }}
           />
         </div>
