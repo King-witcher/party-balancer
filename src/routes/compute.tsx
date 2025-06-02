@@ -98,7 +98,11 @@ function RouteComponent() {
                 >
                   <option value="">Select player...</option>
                   {Object.values(players).map((p) => (
-                    <option key={p.name} value={p.name}>
+                    <option
+                      key={p.name}
+                      value={p.name}
+                      disabled={selectedPlayers.includes(p.name)}
+                    >
                       [{Math.round(p.score)}] {p.name}
                     </option>
                   ))}
