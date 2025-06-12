@@ -1,12 +1,15 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Navbar } from '../components/navbar'
+import { PlayersProvider } from '../contexts/players-context'
 
 export const Route = createRootRoute({
   component: () => (
     <>
       <Navbar />
       <hr />
-      <Outlet />
+      <PlayersProvider>
+        <Outlet />
+      </PlayersProvider>
     </>
   ),
 })

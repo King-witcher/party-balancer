@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { usePlayerbase } from '../hooks/use-playerbase'
 import { useState } from 'react'
+import { usePlayers } from '../contexts/players-context'
 
 export const Route = createFileRoute('/players')({
   component: RouteComponent,
@@ -8,7 +8,7 @@ export const Route = createFileRoute('/players')({
 
 function RouteComponent() {
   const { players, addPlayer, removePlayer, resetPlayer, getList } =
-    usePlayerbase()
+    usePlayers()
 
   const sorted = Object.values(players).sort((a, b) => b.score - a.score)
 

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { usePlayerbase } from './use-playerbase'
+import { usePlayers } from '../contexts/players-context'
 
 export type Team = [
   string | null,
@@ -10,7 +10,8 @@ export type Team = [
 ]
 
 export function useMatchBalancer() {
-  const { players } = usePlayerbase()
+  const { players } = usePlayers()
+  console.log(players)
 
   const [blue, setBlue] = useState<Team>([null, null, null, null, null])
   const [red, setRed] = useState<Team>([null, null, null, null, null])

@@ -1,5 +1,6 @@
-import type { Team } from './use-balancer'
-import { useLocalStorage } from './use-local-storage'
+import { createContext, useContext, type ReactNode } from 'react'
+import type { Team } from '../hooks/use-balancer'
+import { useLocalStorage } from '../hooks/use-local-storage'
 
 export type Player = {
   name: string
@@ -10,7 +11,23 @@ export type Player = {
 const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
 const FINAL_K_FACTOR = 40 // Final K-factor for Elo rating
 
-export function usePlayerbase() {
+type PlayersData = {
+  players: Record<string, Player>
+  addPlayer: (name: string) => void
+  removePlayer: (name: string) => void
+  getList: () => string
+  odds: (winner: Team, loser: Team) => number
+  computeResult: (winners: Team, losers: Team) => void
+  resetPlayer: (playerName: string) => void
+}
+
+interface Props {
+  children?: ReactNode
+}
+
+const PlayersContext = createContext<PlayersData>({} as PlayersData)
+
+export function PlayersProvider({ children }: Props) {
   const [players, setPlayers] = useLocalStorage<Record<string, Player>>(
     'playerbase',
     {}
@@ -104,13 +121,21 @@ export function usePlayerbase() {
     }))
   }
 
-  return {
-    players,
-    addPlayer,
-    removePlayer,
-    computeResult,
-    resetPlayer,
-    odds,
-    getList,
-  }
+  return (
+    <PlayersContext.Provider
+      value={{
+        players,
+        addPlayer,
+        removePlayer,
+        getList,
+        odds,
+        computeResult,
+        resetPlayer,
+      }}
+    >
+      {children}
+    </PlayersContext.Provider>
+  )
 }
+
+export const usePlayers = () => useContext(PlayersContext)

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { usePlayerbase } from '../hooks/use-playerbase'
 import { useMemo, useState } from 'react'
 import { useMatchBalancer } from '../hooks/use-balancer'
+import { usePlayers } from '../contexts/players-context'
 
 export const Route = createFileRoute('/compute')({
   component: RouteComponent,
@@ -12,7 +12,7 @@ function RouteComponent() {
 
   const [playerToCreate, setPlayerToCreate] = useState('')
 
-  const { players, computeResult, odds, addPlayer } = usePlayerbase()
+  const { players, computeResult, odds, addPlayer } = usePlayers()
 
   const blueOdds = useMemo(() => {
     if (blue.some((p) => p === null) || red.some((p) => p === null)) {
