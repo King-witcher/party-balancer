@@ -1,4 +1,4 @@
-import type { Team } from '../routes/compute'
+import type { Team } from './use-balancer'
 import { useLocalStorage } from './use-local-storage'
 
 export type Player = {
@@ -43,7 +43,9 @@ export function usePlayerbase() {
     const unsorted = Object.values(players)
     const sorted = unsorted.sort((a, b) => b.score - a.score)
     return sorted.reduce((prev, current, index) => {
-      return `${prev}\n#${index + 1}: ${current.name} - ${Math.round(current.score)}`
+      let line = `${prev}\n#${index + 1}: ${current.name} - ${Math.round(current.score)}`
+      if (current.k > 100) line += ' (?)'
+      return line
     }, '')
   }
 

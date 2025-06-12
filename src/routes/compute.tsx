@@ -1,50 +1,34 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { usePlayerbase } from '../hooks/use-playerbase'
 import { useMemo, useState } from 'react'
+import { useMatchBalancer } from '../hooks/use-balancer'
 
 export const Route = createFileRoute('/compute')({
   component: RouteComponent,
 })
 
-export type Team = [
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-]
-export type Match = [Team, Team]
-
 function RouteComponent() {
-  const [match, setMatch] = useState<Match>([
-    [null, null, null, null, null],
-    [null, null, null, null, null],
-  ])
+  const { blue, red, isFull, setPlayer, balanceTeams } = useMatchBalancer()
 
   const [playerToCreate, setPlayerToCreate] = useState('')
 
   const { players, computeResult, odds, addPlayer } = usePlayerbase()
 
   const blueOdds = useMemo(() => {
-    if (match[0].some((p) => p === null) || match[1].some((p) => p === null)) {
+    if (blue.some((p) => p === null) || red.some((p) => p === null)) {
       return null
     }
-    return odds(match[0], match[1])
-  }, [match, players])
+    return odds(blue, red)
+  }, [blue, red, players])
 
-  const selectedPlayers = match.flat().filter((p) => p !== null)
+  const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
 
   function handleChangeSelect(
-    teamIndex: number,
+    team: 'blue' | 'red',
     playerIndex: number,
     playerName: string
   ) {
-    setMatch((prevMatch) => {
-      const newMatch = [...prevMatch] as Match
-      newMatch[teamIndex] = [...newMatch[teamIndex]] as Team
-      newMatch[teamIndex][playerIndex] = playerName || null
-      return newMatch
-    })
+    setPlayer(team, playerIndex, playerName)
   }
 
   function handleAddPlayer(event: React.FormEvent<HTMLFormElement>) {
@@ -83,11 +67,13 @@ function RouteComponent() {
             Blue Team
           </h2>
           <div className="flex flex-col gap-3">
-            {match[0].map((player, index) => (
+            {blue.map((player, index) => (
               <div key={`0-${index}`} className="flex items-center">
                 <span className="text-gray-600 mr-2 w-6">{index + 1}.</span>
                 <select
-                  onChange={(e) => handleChangeSelect(0, index, e.target.value)}
+                  onChange={(e) =>
+                    handleChangeSelect('blue', index, e.target.value)
+                  }
                   value={player || ''}
                   data-empty={player === null}
                   className="w-full p-2 border border-blue-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white font-semibold data-[empty=true]:text-gray-400 data-[empty=true]:font-normal"
@@ -118,11 +104,13 @@ function RouteComponent() {
             Red Team
           </h2>
           <div className="flex flex-col gap-3">
-            {match[1].map((player, index) => (
+            {red.map((player, index) => (
               <div key={`1-${index}`} className="flex items-center">
                 <span className="text-gray-600 mr-2 w-6">{index + 1}.</span>
                 <select
-                  onChange={(e) => handleChangeSelect(1, index, e.target.value)}
+                  onChange={(e) =>
+                    handleChangeSelect('red', index, e.target.value)
+                  }
                   value={player || ''}
                   data-empty={player === null}
                   className="w-full p-2 border border-red-200 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 bg-white font-semibold data-[empty=true]:text-gray-400 data-[empty=true]:font-normal"
@@ -148,13 +136,12 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="mb-8 border-2 border-gray-200 rounded-lg p-4 shadow-sm bg-gray-50">
-        <h2 className="text-2xl font-semibold text-center mb-4 text-gray-800">
+      <div className="mb-8 border-2 border-gray-200 rounded-lg p-4 shadow-sm bg-gray-50 flex flex-col gap-4">
+        <h2 className="text-2xl font-semibold text-center text-gray-800">
           Win Probability
         </h2>
 
-        {match[0].some((p) => p === null) ||
-        match[1].some((p) => p === null) ? (
+        {blue.some((p) => p === null) || red.some((p) => p === null) ? (
           <div className="text-center text-gray-600 py-2">
             Please select all players to see win probability
           </div>
@@ -182,7 +169,7 @@ function RouteComponent() {
         )}
 
         {/* Probability Bar */}
-        <div className="h-6 bg-gray-200 rounded-full overflow-hidden mt-4">
+        <div className="h-6 bg-gray-200 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-300"
             style={{
@@ -190,20 +177,36 @@ function RouteComponent() {
             }}
           />
         </div>
+        {isFull && (
+          <button
+            type="button"
+            className="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-md shadow-md hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center"
+            onClick={balanceTeams}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <title>icon</title>
+              <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+            </svg>
+            Balance Teams
+          </button>
+        )}
       </div>
 
       <div className="flex justify-center gap-4">
         <button
           type="button"
           className={`px-6 py-3 ${
-            match[0].some((p) => p === null) || match[1].some((p) => p === null)
+            blue.some((p) => p === null) || red.some((p) => p === null)
               ? 'bg-blue-400 cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700'
           } text-white font-medium rounded-md shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-opacity-50 flex items-center`}
-          onClick={() => computeResult(match[0], match[1])}
-          disabled={
-            match[0].some((p) => p === null) || match[1].some((p) => p === null)
-          }
+          onClick={() => computeResult(blue, red)}
+          disabled={blue.some((p) => p === null) || red.some((p) => p === null)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -224,14 +227,12 @@ function RouteComponent() {
         <button
           type="button"
           className={`px-6 py-3 ${
-            match[0].some((p) => p === null) || match[1].some((p) => p === null)
+            red.some((p) => p === null) || blue.some((p) => p === null)
               ? 'bg-red-400 cursor-not-allowed'
               : 'bg-red-600 hover:bg-red-700'
           } text-white font-medium rounded-md shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-opacity-50 flex items-center`}
-          onClick={() => computeResult(match[1], match[0])}
-          disabled={
-            match[0].some((p) => p === null) || match[1].some((p) => p === null)
-          }
+          onClick={() => computeResult(red, blue)}
+          disabled={red.some((p) => p === null) || blue.some((p) => p === null)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
