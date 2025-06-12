@@ -48,7 +48,7 @@ export function useMatchBalancer() {
     return Math.abs(score1 - score2)
   }
 
-  function balanceTeams() {
+  function hardBalance() {
     const involvedPlayers = [
       ...blue.filter((p) => p !== null),
       ...red.filter((p) => p !== null),
@@ -97,11 +97,51 @@ export function useMatchBalancer() {
     setRed(coinflip ? bestRed : bestBlue)
   }
 
+  function softBalance() {
+    const booleans = [false, true]
+    const invertTop = Math.random() < 0.5
+    let bestDisparity = Number.POSITIVE_INFINITY
+    let bestBlue: Team = [null, null, null, null, null]
+    let bestRed: Team = [null, null, null, null, null]
+    for (const invertJungle of booleans) {
+      for (const invertMid of booleans) {
+        for (const invertBot of booleans) {
+          for (const invertSupport of booleans) {
+            const newBlue: Team = [
+              invertTop ? red[0] : blue[0],
+              invertJungle ? red[1] : blue[1],
+              invertMid ? red[2] : blue[2],
+              invertBot ? red[3] : blue[3],
+              invertSupport ? red[4] : blue[4],
+            ]
+            const newRed: Team = [
+              invertTop ? blue[0] : red[0],
+              invertJungle ? blue[1] : red[1],
+              invertMid ? blue[2] : red[2],
+              invertBot ? blue[3] : red[3],
+              invertSupport ? blue[4] : red[4],
+            ]
+            const disparity = getDisparity(newBlue, newRed)
+            if (disparity < bestDisparity) {
+              bestDisparity = disparity
+              bestBlue = newBlue
+              bestRed = newRed
+            }
+          }
+        }
+      }
+    }
+
+    setBlue(bestBlue)
+    setRed(bestRed)
+  }
+
   return {
     blue,
     red,
     isFull,
     setPlayer,
-    balanceTeams,
+    hardBalance,
+    softBalance,
   }
 }

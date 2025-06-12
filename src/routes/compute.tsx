@@ -1,25 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useMatchBalancer } from '../hooks/use-balancer'
 import { usePlayers } from '../contexts/players-context'
+import { WinProbabilities } from '../components/win-probabilities'
 
 export const Route = createFileRoute('/compute')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { blue, red, isFull, setPlayer, balanceTeams } = useMatchBalancer()
+  const { blue, red, isFull, setPlayer, hardBalance, softBalance } =
+    useMatchBalancer()
 
   const [playerToCreate, setPlayerToCreate] = useState('')
 
-  const { players, computeResult, odds, addPlayer } = usePlayers()
-
-  const blueOdds = useMemo(() => {
-    if (blue.some((p) => p === null) || red.some((p) => p === null)) {
-      return null
-    }
-    return odds(blue, red)
-  }, [blue, red, players])
+  const { players, computeResult, addPlayer } = usePlayers()
 
   const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
 
@@ -136,66 +131,13 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="mb-8 border-2 border-gray-200 rounded-lg p-4 shadow-sm bg-gray-50 flex flex-col gap-4">
-        <h2 className="text-2xl font-semibold text-center text-gray-800">
-          Win Probability
-        </h2>
-
-        {blue.some((p) => p === null) || red.some((p) => p === null) ? (
-          <div className="text-center text-gray-600 py-2">
-            Please select all players to see win probability
-          </div>
-        ) : (
-          <div className="flex items-center">
-            {/* Blue Team */}
-            <div className="w-1/2 text-center">
-              <div className="font-bold text-xl text-blue-800">Blue Team</div>
-              <div className="text-2xl font-bold">
-                {blueOdds ? `${Math.round(blueOdds * 100)}%` : '50%'}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="text-2xl font-bold text-gray-500">vs</div>
-
-            {/* Red Team */}
-            <div className="w-1/2 text-center">
-              <div className="font-bold text-xl text-red-800">Red Team</div>
-              <div className="text-2xl font-bold">
-                {blueOdds ? `${Math.round((1 - blueOdds) * 100)}%` : '50%'}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Probability Bar */}
-        <div className="h-6 bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-300"
-            style={{
-              width: `${blueOdds ? Math.round(blueOdds * 100) : selectedPlayers.length * 10}%`,
-            }}
-          />
-        </div>
-        {isFull && (
-          <button
-            type="button"
-            className="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-md shadow-md hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center"
-            onClick={balanceTeams}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <title>icon</title>
-              <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
-            </svg>
-            Balance Teams
-          </button>
-        )}
-      </div>
+      <WinProbabilities
+        blue={blue}
+        red={red}
+        softBalance={softBalance}
+        hardBalance={hardBalance}
+        isFull={isFull}
+      />
 
       <div className="flex justify-center gap-4">
         <button

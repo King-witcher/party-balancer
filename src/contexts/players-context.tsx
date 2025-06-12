@@ -9,7 +9,7 @@ export type Player = {
 }
 
 const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
-const FINAL_K_FACTOR = 40 // Final K-factor for Elo rating
+const FINAL_K_FACTOR = 32 // Final K-factor for Elo rating
 
 type PlayersData = {
   players: Record<string, Player>
