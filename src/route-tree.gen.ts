@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as PlayersImport } from './routes/players'
 import { Route as ComputeImport } from './routes/compute'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
+
+const PlayersRoute = PlayersImport.update({
+  id: '/players',
+  path: '/players',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ComputeRoute = ComputeImport.update({
   id: '/compute',
@@ -46,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComputeImport
       parentRoute: typeof rootRoute
     }
+    '/players': {
+      id: '/players'
+      path: '/players'
+      fullPath: '/players'
+      preLoaderRoute: typeof PlayersImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +68,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compute': typeof ComputeRoute
+  '/players': typeof PlayersRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compute': typeof ComputeRoute
+  '/players': typeof PlayersRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/compute': typeof ComputeRoute
+  '/players': typeof PlayersRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/compute'
+  fullPaths: '/' | '/compute' | '/players'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/compute'
-  id: '__root__' | '/' | '/compute'
+  to: '/' | '/compute' | '/players'
+  id: '__root__' | '/' | '/compute' | '/players'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ComputeRoute: typeof ComputeRoute
+  PlayersRoute: typeof PlayersRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ComputeRoute: ComputeRoute,
+  PlayersRoute: PlayersRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +116,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/compute"
+        "/compute",
+        "/players"
       ]
     },
     "/": {
@@ -105,6 +125,9 @@ export const routeTree = rootRoute
     },
     "/compute": {
       "filePath": "compute.tsx"
+    },
+    "/players": {
+      "filePath": "players.tsx"
     }
   }
 }

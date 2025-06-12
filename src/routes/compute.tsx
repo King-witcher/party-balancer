@@ -21,7 +21,9 @@ function RouteComponent() {
     [null, null, null, null, null],
   ])
 
-  const { players, computeResult, odds } = usePlayerbase()
+  const [playerToCreate, setPlayerToCreate] = useState('')
+
+  const { players, computeResult, odds, addPlayer } = usePlayerbase()
 
   const blueOdds = useMemo(() => {
     if (match[0].some((p) => p === null) || match[1].some((p) => p === null)) {
@@ -45,11 +47,34 @@ function RouteComponent() {
     })
   }
 
+  function handleAddPlayer(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    addPlayer(playerToCreate)
+    setPlayerToCreate('')
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Match Setup
       </h1>
+
+      <form className="flex gap-2 items-center mb-4" onSubmit={handleAddPlayer}>
+        <input
+          type="text"
+          placeholder="Create new player"
+          className="border border-gray-300 rounded-md p-2 flex-1"
+          value={playerToCreate}
+          onChange={(e) => setPlayerToCreate(e.target.value)}
+          required
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+        >
+          Create
+        </button>
+      </form>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <div className="border border-blue-200 p-6 rounded-lg shadow-sm bg-blue-50">
@@ -64,18 +89,23 @@ function RouteComponent() {
                 <select
                   onChange={(e) => handleChangeSelect(0, index, e.target.value)}
                   value={player || ''}
-                  className="w-full p-2 border border-blue-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white"
+                  data-empty={player === null}
+                  className="w-full p-2 border border-blue-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-400 bg-white font-semibold data-[empty=true]:text-gray-400 data-[empty=true]:font-normal"
                 >
                   <option value="">Select player...</option>
-                  {Object.values(players).map((p) => (
-                    <option
-                      disabled={selectedPlayers.includes(p.name)}
-                      key={p.name}
-                      value={p.name}
-                    >
-                      [{Math.round(p.score)}] {p.name}
-                    </option>
-                  ))}
+                  {Object.values(players).map((p) => {
+                    if (p.name !== player && selectedPlayers.includes(p.name))
+                      return null
+                    return (
+                      <option
+                        key={p.name}
+                        value={p.name}
+                        className="text-black"
+                      >
+                        [{Math.round(p.score)}] {p.name}
+                      </option>
+                    )
+                  })}
                 </select>
               </div>
             ))}
@@ -94,18 +124,23 @@ function RouteComponent() {
                 <select
                   onChange={(e) => handleChangeSelect(1, index, e.target.value)}
                   value={player || ''}
-                  className="w-full p-2 border border-red-200 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 bg-white"
+                  data-empty={player === null}
+                  className="w-full p-2 border border-red-200 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 bg-white font-semibold data-[empty=true]:text-gray-400 data-[empty=true]:font-normal"
                 >
                   <option value="">Select player...</option>
-                  {Object.values(players).map((p) => (
-                    <option
-                      key={p.name}
-                      value={p.name}
-                      disabled={selectedPlayers.includes(p.name)}
-                    >
-                      [{Math.round(p.score)}] {p.name}
-                    </option>
-                  ))}
+                  {Object.values(players).map((p) => {
+                    if (p.name !== player && selectedPlayers.includes(p.name))
+                      return null
+                    return (
+                      <option
+                        key={p.name}
+                        value={p.name}
+                        className="text-black"
+                      >
+                        [{Math.round(p.score)}] {p.name}
+                      </option>
+                    )
+                  })}
                 </select>
               </div>
             ))}
