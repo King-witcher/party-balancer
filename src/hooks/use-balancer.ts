@@ -52,7 +52,7 @@ export function useMatchBalancer() {
     const involvedPlayers = [
       ...blue.filter((p) => p !== null),
       ...red.filter((p) => p !== null),
-    ]
+    ].sort(() => Math.random() - 0.5)
 
     if (involvedPlayers.length < 10) {
       console.warn('Not enough players to balance teams')
@@ -136,6 +136,10 @@ export function useMatchBalancer() {
     setRed(bestRed)
   }
 
+  function getTeamsText(): string {
+    return 'Blue:\n' + `${blue.join('\n')}\n` + '\nRed:\n' + `${red.join('\n')}`
+  }
+
   return {
     blue,
     red,
@@ -143,5 +147,6 @@ export function useMatchBalancer() {
     setPlayer,
     hardBalance,
     softBalance,
+    getTeamsText,
   }
 }
