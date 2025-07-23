@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from 'react'
 import type { Team } from '../hooks/use-balancer'
 import { useLocalStorage } from '../hooks/use-local-storage'
+import { exportPlayers, importPlayers } from '@/lib/serialization'
 
 export type Player = {
   name: string
@@ -11,8 +12,10 @@ export type Player = {
 export const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
 export const FINAL_K_FACTOR = 32 // Final K-factor for Elo rating
 
+export type PlayerSet = Record<string, Player>
+
 type PlayersData = {
-  players: Record<string, Player>
+  players: PlayerSet
   addPlayer: (name: string) => void
   removePlayer: (name: string) => void
   getList: () => string
@@ -20,6 +23,8 @@ type PlayersData = {
   computeResult: (winners: Team, losers: Team) => void
   updatePlayer: (playerName: string, newData: Player) => void
   resetPlayer: (playerName: string) => void
+  importJSON: () => Promise<void>
+  exportJSON: () => void
 }
 
 interface Props {
@@ -29,10 +34,7 @@ interface Props {
 const PlayersContext = createContext<PlayersData>({} as PlayersData)
 
 export function PlayersProvider({ children }: Props) {
-  const [players, setPlayers] = useLocalStorage<Record<string, Player>>(
-    'playerbase',
-    {}
-  )
+  const [players, setPlayers] = useLocalStorage<PlayerSet>('playerbase', {})
 
   function addPlayer(name: string) {
     if (players[name]) {
@@ -130,6 +132,15 @@ export function PlayersProvider({ children }: Props) {
     }
   }
 
+  async function importJSON(): Promise<void> {
+    const players = await importPlayers()
+    setPlayers(players)
+  }
+
+  function exportJSON(): void {
+    exportPlayers(players)
+  }
+
   function resetPlayer(playerName: string) {
     setPlayers((prev) => ({
       ...prev,
@@ -152,6 +163,8 @@ export function PlayersProvider({ children }: Props) {
         computeResult,
         updatePlayer,
         resetPlayer,
+        importJSON,
+        exportJSON,
       }}
     >
       {children}
