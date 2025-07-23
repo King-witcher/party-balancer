@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useMatchBalancer } from '../hooks/use-balancer'
+import { useMatchBalancer, type Team } from '../hooks/use-balancer'
 import { usePlayers } from '../contexts/players-context'
 import { WinProbabilities } from '../components/win-probabilities'
 
@@ -11,6 +11,8 @@ export const Route = createFileRoute('/compute')({
 function RouteComponent() {
   const { blue, red, isFull, setPlayer, hardBalance, softBalance } =
     useMatchBalancer()
+
+  const [buttonsDisabled, setButtonsDisabled] = useState(false)
 
   const [playerToCreate, setPlayerToCreate] = useState('')
 
@@ -30,6 +32,14 @@ function RouteComponent() {
     event.preventDefault()
     addPlayer(playerToCreate)
     setPlayerToCreate('')
+  }
+
+  function handleComputeResult(winners: Team, losers: Team) {
+    setButtonsDisabled(true)
+    computeResult(winners, losers)
+    setTimeout(() => {
+      setButtonsDisabled(false)
+    }, 1000)
   }
 
   return (
@@ -147,8 +157,12 @@ function RouteComponent() {
               ? 'bg-blue-400 cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700'
           } text-white font-medium rounded-md shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-opacity-50 flex items-center`}
-          onClick={() => computeResult(blue, red)}
-          disabled={blue.some((p) => p === null) || red.some((p) => p === null)}
+          onClick={() => handleComputeResult(blue, red)}
+          disabled={
+            blue.some((p) => p === null) ||
+            red.some((p) => p === null) ||
+            buttonsDisabled
+          }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -173,8 +187,12 @@ function RouteComponent() {
               ? 'bg-red-400 cursor-not-allowed'
               : 'bg-red-600 hover:bg-red-700'
           } text-white font-medium rounded-md shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-opacity-50 flex items-center`}
-          onClick={() => computeResult(red, blue)}
-          disabled={red.some((p) => p === null) || blue.some((p) => p === null)}
+          onClick={() => handleComputeResult(red, blue)}
+          disabled={
+            red.some((p) => p === null) ||
+            blue.some((p) => p === null) ||
+            buttonsDisabled
+          }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
