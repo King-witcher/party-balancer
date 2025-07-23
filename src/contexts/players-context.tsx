@@ -8,8 +8,8 @@ export type Player = {
   score: number
 }
 
-const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
-const FINAL_K_FACTOR = 32 // Final K-factor for Elo rating
+export const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
+export const FINAL_K_FACTOR = 32 // Final K-factor for Elo rating
 
 type PlayersData = {
   players: Record<string, Player>
@@ -18,6 +18,7 @@ type PlayersData = {
   getList: () => string
   odds: (winner: Team, loser: Team) => number
   computeResult: (winners: Team, losers: Team) => void
+  updatePlayer: (playerName: string, newData: Player) => void
   resetPlayer: (playerName: string) => void
 }
 
@@ -110,6 +111,25 @@ export function PlayersProvider({ children }: Props) {
     setPlayers({ ...players })
   }
 
+  function updatePlayer(playerName: string, newData: Player) {
+    if (playerName === newData.name) {
+      setPlayers((prev) => ({
+        ...prev,
+        [playerName]: newData,
+      }))
+    }
+
+    if (playerName !== newData.name) {
+      setPlayers((prev) => {
+        const { [playerName]: _, ...withoutOld } = prev
+        return {
+          ...withoutOld,
+          [newData.name]: newData,
+        }
+      })
+    }
+  }
+
   function resetPlayer(playerName: string) {
     setPlayers((prev) => ({
       ...prev,
@@ -130,6 +150,7 @@ export function PlayersProvider({ children }: Props) {
         getList,
         odds,
         computeResult,
+        updatePlayer,
         resetPlayer,
       }}
     >

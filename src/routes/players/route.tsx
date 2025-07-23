@@ -1,6 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { usePlayers } from '../contexts/players-context'
+import { usePlayers } from '@/contexts/players-context'
+import { EditDialog } from './-edit-dialog'
+import { Edit, RotateCcw, TrashIcon } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export const Route = createFileRoute('/players')({
   component: RouteComponent,
@@ -11,6 +19,8 @@ function RouteComponent() {
     usePlayers()
 
   const sorted = Object.values(players).sort((a, b) => b.score - a.score)
+
+  const [playerToEdit, setPlayerToEdit] = useState<string | null>(null)
 
   const [newPlayerName, setNewPlayerName] = useState('')
 
@@ -32,7 +42,7 @@ function RouteComponent() {
   }
 
   return (
-    <div>
+    <>
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">Add New Player</h2>
         <form onSubmit={handleSubmit} className="flex gap-3">
@@ -89,20 +99,43 @@ function RouteComponent() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex gap-2 items-end justify-end">
-                      <button
-                        type="button"
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-                        onClick={() => removePlayer(player.name)}
-                      >
-                        Remove
-                      </button>
-                      <button
-                        type="button"
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
-                        onClick={() => resetPlayer(player.name)}
-                      >
-                        Reset
-                      </button>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setPlayerToEdit(player.name)}
+                          >
+                            <Edit size={16} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Edit</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => resetPlayer(player.name)}
+                          >
+                            <RotateCcw size={16} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Reset</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="text-destructive"
+                            onClick={() => removePlayer(player.name)}
+                          >
+                            <TrashIcon size={16} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Delete</TooltipContent>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>
@@ -121,6 +154,10 @@ function RouteComponent() {
           </button>
         </div>
       </div>
-    </div>
+      <EditDialog
+        playerName={playerToEdit}
+        onClose={() => setPlayerToEdit(null)}
+      />
+    </>
   )
 }
