@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { usePlayers } from '@/contexts/players-context'
 import { useState } from 'react'
 
@@ -64,27 +65,39 @@ export function EditDialog({ playerName, onClose }: Props) {
               Avoid manually calibrating rating params as much as possible.
             </DialogDescription>
           </DialogHeader>
-          <Input
-            key={playerName}
-            value={newName ?? playerToEdit?.name}
-            placeholder="Player Name"
-            onChange={(e) => setNewName(e.target.value)}
-            required
-          />
-          <Input
-            type="number"
-            value={newScore ?? playerToEdit?.score}
-            placeholder="Player Score"
-            onChange={(e) => setNewScore(Number(e.target.value))}
-            required
-          />
-          <Input
-            type="number"
-            value={newKFactor ?? playerToEdit?.k}
-            placeholder="Player K-Factor"
-            onChange={(e) => setNewKFactor(Number(e.target.value))}
-            required
-          />
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              key={playerName}
+              id="name"
+              value={newName ?? playerToEdit?.name}
+              placeholder="Player Name"
+              onChange={(e) => setNewName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="score">Score</Label>
+            <Input
+              type="number"
+              id="score"
+              value={newScore ?? playerToEdit?.score}
+              placeholder="Player Score"
+              onChange={(e) => setNewScore(Number(e.target.value))}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="k-factor">K-Factor</Label>
+            <Input
+              type="number"
+              id="k-factor"
+              value={newKFactor ?? playerToEdit?.k}
+              placeholder="Player K-Factor"
+              onChange={(e) => setNewKFactor(Number(e.target.value))}
+              required
+            />
+          </div>
           <DialogFooter>
             <Button type="button" variant="secondary" onClick={handleClose}>
               Cancel
