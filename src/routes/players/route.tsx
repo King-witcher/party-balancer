@@ -104,7 +104,7 @@ function RouteComponent() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   K-Factor
                 </th>
-                <th className="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider flex gap-2 justify-end">
+                <th className="px-2 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider flex gap-2 justify-end">
                   <Button
                     type="button"
                     variant="outline"
@@ -151,7 +151,7 @@ function RouteComponent() {
                     <td className="px-6 py-2 whitespace-nowrap text-gray-500">
                       {Math.round(player.k)}
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap text-right">
+                    <td className="p-2 whitespace-nowrap text-right">
                       <div className="flex gap-2 items-end justify-end">
                         <Tooltip>
                           <TooltipTrigger>
