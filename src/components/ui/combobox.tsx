@@ -9,7 +9,7 @@ import {
   CommandList,
 } from './command'
 import { Check, ChevronsUpDown } from 'lucide-react'
-import { useState } from 'react'
+import { ComponentProps, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 export type ComboboxOption = {
@@ -23,9 +23,10 @@ interface Props {
   onChange: (value: string | null) => void
   placeholder?: string
   className?: string
+  buttonProps?: ComponentProps<'button'>
 }
 
-export function Combobox({ onChange, options, value }: Props) {
+export function Combobox({ onChange, options, value, buttonProps }: Props) {
   const [open, setOpen] = useState(false)
 
   function handleChange(value: string | null) {
@@ -44,6 +45,7 @@ export function Combobox({ onChange, options, value }: Props) {
             'w-[270px] justify-between',
             'data-[empty=true]:text-gray-600 data-[empty=true]:font-normal'
           )}
+          {...buttonProps}
         >
           {value
             ? options.find((option) => option.id === value)?.label

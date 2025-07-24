@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import { usePlayers } from '../contexts/players-context'
-import type { Team } from '../hooks/use-balancer'
 import { Scale, Weight } from 'lucide-react'
+import { usePlayers } from '@/contexts/players-context'
+import { Team } from '@/hooks/use-balancer'
 
 interface Props {
   blue: Team
