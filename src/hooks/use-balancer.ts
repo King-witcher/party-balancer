@@ -19,7 +19,11 @@ export function useMatchBalancer() {
     return blue.every((p) => p !== null) && red.every((p) => p !== null)
   }, [blue, red])
 
-  function setPlayer(team: 'blue' | 'red', index: number, player: string) {
+  function setPlayer(
+    team: 'blue' | 'red',
+    index: number,
+    player: string | null
+  ) {
     if (team === 'blue') {
       setBlue((prev) => {
         const newTeam = [...prev] as typeof prev

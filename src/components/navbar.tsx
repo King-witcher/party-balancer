@@ -16,7 +16,7 @@ export function Navbar() {
             to="/compute"
             className="text-gray-300 hover:text-white px-3 py-2 rounded-md transition duration-300 [&.active]:bg-gray-700 [&.active]:font-bold"
           >
-            Compute
+            Simulator
           </Link>
         </div>
       </div>
