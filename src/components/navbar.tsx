@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 export function Navbar() {
   return (
-    <nav className="bg-gray-800 p-4 shadow-md">
+    <nav className="bg-primary p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white font-bold text-xl">Party Balancer</div>
         <div className="flex gap-4">
