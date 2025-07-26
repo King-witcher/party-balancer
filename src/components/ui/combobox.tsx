@@ -59,12 +59,6 @@ export function Combobox({ onChange, options, value, buttonProps }: Props) {
           <CommandList>
             <CommandEmpty>No player found.</CommandEmpty>
             <CommandGroup>
-              <CommandItem
-                className={!value ? 'bg-gray-100' : 'text-gray-500'}
-                onSelect={() => handleChange(null)}
-              >
-                (Empty)
-              </CommandItem>
               {options.map((option) => (
                 <CommandItem
                   className={
