@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { usePlayers } from '@/contexts/players-context'
+import { Player, usePlayers } from '@/contexts/players-context'
 import { useState } from 'react'
 
 interface Props {
@@ -21,91 +21,96 @@ export function EditDialog({ playerName, onClose }: Props) {
   const { players, updatePlayer } = usePlayers()
   const playerToEdit = playerName ? players[playerName] : null
 
-  const [newName, setNewName] = useState<string | null>(null)
-  const [newScore, setNewScore] = useState<number | null>(null)
-  const [newKFactor, setNewKFactor] = useState<number | null>(null)
-
-  function clear() {
-    setNewName(null)
-    setNewScore(null)
-    setNewKFactor(null)
+  function handleOpenChange(isOpen: boolean) {
+    if (!isOpen) onClose?.()
   }
+
+  function handleSubmit(player: Player) {
+    updatePlayer(playerName!, player)
+    onClose?.()
+  }
+
+  return (
+    <Dialog open={!!playerName} onOpenChange={handleOpenChange}>
+      <DialogContent>
+        {/* <form className="flex flex-col gap-4" onSubmit={handleSubmit}> */}
+        <DialogHeader>
+          <DialogTitle>Edit Player</DialogTitle>
+          <DialogDescription>
+            Avoid manually calibrating rating params as much as possible.
+          </DialogDescription>
+        </DialogHeader>
+        <EditDialogInner initValue={playerToEdit!} onChange={handleSubmit} />
+        <DialogFooter>
+          <Button type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button type="submit">Save</Button>
+        </DialogFooter>
+        {/* </form> */}
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+type EditDialogInnerProps = {
+  initValue?: Player
+  onChange?: (data: Player) => void
+}
+
+function EditDialogInner(props: EditDialogInnerProps) {
+  const { initValue, onChange } = props
+
+  const [playerName, setPlayerName] = useState(initValue?.name ?? '')
+  const [playerScore, setPlayerScore] = useState(initValue?.score ?? 0)
+  const [playerKFactor, setPlayerKFactor] = useState(initValue?.k ?? 0)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!playerName) return
 
-    updatePlayer(playerName, {
-      name: newName ?? playerToEdit?.name!,
-      score: newScore ?? playerToEdit?.score!,
-      k: newKFactor ?? playerToEdit?.k!,
+    onChange?.({
+      name: playerName,
+      score: playerScore,
+      k: playerKFactor,
     })
-
-    clear()
-    onClose?.()
-  }
-
-  function handleClose() {
-    clear()
-    onClose?.()
-  }
-
-  function handleOpenChange(isOpen: boolean) {
-    if (!isOpen) handleClose()
   }
 
   return (
-    <Dialog open={!!playerName} onOpenChange={handleOpenChange}>
-      <DialogContent>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Edit Player</DialogTitle>
-            <DialogDescription>
-              Avoid manually calibrating rating params as much as possible.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              key={playerName}
-              id="name"
-              value={newName ?? playerToEdit?.name}
-              placeholder="Player Name"
-              onChange={(e) => setNewName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="score">Score</Label>
-            <Input
-              type="number"
-              id="score"
-              value={newScore ?? playerToEdit?.score}
-              placeholder="Player Score"
-              onChange={(e) => setNewScore(Number(e.target.value))}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="k-factor">K-Factor</Label>
-            <Input
-              type="number"
-              id="k-factor"
-              value={newKFactor ?? playerToEdit?.k}
-              placeholder="Player K-Factor"
-              onChange={(e) => setNewKFactor(Number(e.target.value))}
-              required
-            />
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          value={playerName}
+          placeholder="Player Name"
+          onChange={(e) => setPlayerName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="score">Score</Label>
+        <Input
+          type="number"
+          id="score"
+          value={playerScore}
+          placeholder="Player Score"
+          onChange={(e) => setPlayerScore(Number(e.target.value))}
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="k-factor">K-Factor</Label>
+        <Input
+          type="number"
+          id="k-factor"
+          value={playerKFactor}
+          placeholder="Player K-Factor"
+          onChange={(e) => setPlayerKFactor(Number(e.target.value))}
+          required
+        />
+      </div>
+    </form>
   )
 }
