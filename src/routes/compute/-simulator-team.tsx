@@ -74,6 +74,7 @@ export function SimulatorTeam({
                   e.dataTransfer.setData('team', team)
                   e.dataTransfer.setData('index', index.toString())
                 },
+                onDragOver: (e) => e.preventDefault(),
                 onDrop: getDropHandler(playerName || null, team, index),
               }}
               onChange={(value) => handleChangeSelect(team, index, value)}

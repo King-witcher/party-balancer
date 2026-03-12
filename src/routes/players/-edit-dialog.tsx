@@ -33,7 +33,6 @@ export function EditDialog({ playerName, onClose }: Props) {
   return (
     <Dialog open={!!playerName} onOpenChange={handleOpenChange}>
       <DialogContent>
-        {/* <form className="flex flex-col gap-4" onSubmit={handleSubmit}> */}
         <DialogHeader>
           <DialogTitle>Edit Player</DialogTitle>
           <DialogDescription>
@@ -47,7 +46,6 @@ export function EditDialog({ playerName, onClose }: Props) {
           </Button>
           <Button type="submit">Save</Button>
         </DialogFooter>
-        {/* </form> */}
       </DialogContent>
     </Dialog>
   )
