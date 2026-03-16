@@ -72,7 +72,7 @@ export function Combobox({
         >
           {value
             ? (options.find((option) => option.id === value)?.label ?? value)
-            : 'Select player...'}
+            : 'Selecionar jogador...'}
           <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
@@ -103,7 +103,7 @@ export function Combobox({
                   Criar "{inputValue.trim()}"
                 </CommandItem>
               )}
-            <CommandEmpty>No player found.</CommandEmpty>
+            <CommandEmpty>Nenhum jogador encontrado.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem

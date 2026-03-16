@@ -41,7 +41,15 @@ function RouteComponent() {
 
       {/* Center container */}
       <div className="flex flex-1 justify-center items-center">
-        <div className="flex-col gap-4">
+        <div className="flex flex-col gap-4">
+          <BalancePanel
+            blue={blue}
+            red={red}
+            softBalance={softBalance}
+            hardBalance={hardBalance}
+            isFull={isFull}
+          />
+
           <SimulatorPanel
             red={red}
             blue={blue}
@@ -49,14 +57,6 @@ function RouteComponent() {
             setPlayer={setPlayer}
             shuffle={shuffle}
             onSelectPlayer={setSelectedPlayerId}
-          />
-
-          <BalancePanel
-            blue={blue}
-            red={red}
-            softBalance={softBalance}
-            hardBalance={hardBalance}
-            isFull={isFull}
           />
         </div>
       </div>

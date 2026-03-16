@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Scale, Weight } from 'lucide-react'
 import { usePlayers } from '@/contexts/players-context'
 import { Team } from '@/hooks/use-balancer'
+import { Panel } from '../panel'
 
 interface Props {
   blue: Team
@@ -29,7 +30,7 @@ export function BalancePanel({
   }, [blue, red, players])
 
   return (
-    <div className="mt-8 border w-full border-border rounded-lg p-4 shadow-sm bg-card flex flex-col gap-4">
+    <Panel className="w-full flex flex-col gap-4">
       <h2 className="text-3xl font-normal text-center text-foreground">
         Balanceamento
       </h2>
@@ -92,6 +93,6 @@ export function BalancePanel({
           </button>
         </div>
       )}
-    </div>
+    </Panel>
   )
 }
