@@ -27,7 +27,13 @@ interface Props {
   buttonProps?: ComponentProps<'button'>
 }
 
-export function Combobox({ onChange, options, value, onCreateOption, buttonProps }: Props) {
+export function Combobox({
+  onChange,
+  options,
+  value,
+  onCreateOption,
+  buttonProps,
+}: Props) {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
 
@@ -65,7 +71,7 @@ export function Combobox({ onChange, options, value, onCreateOption, buttonProps
           {...buttonProps}
         >
           {value
-            ? options.find((option) => option.id === value)?.label ?? value
+            ? (options.find((option) => option.id === value)?.label ?? value)
             : 'Select player...'}
           <ChevronsUpDown />
         </Button>
