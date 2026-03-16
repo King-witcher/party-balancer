@@ -49,30 +49,6 @@ export function Simulator({
 
   return (
     <div className="rounded-xl flex flex-col gap-6 p-6 w-fit border border-gray-200 bg-white shadow-md">
-      {/* Add player form + shuffle */}
-      {/* <div className="flex gap-3 items-center">
-        <form onSubmit={handleAddPlayer} className="flex gap-3 flex-1">
-          <Input
-            type="text"
-            placeholder="Type a new player name"
-            value={playerToCreate}
-            onChange={(e) => setPlayerToCreate(e.target.value)}
-            required
-          />
-          <Button type="submit">
-            <Plus /> Adicionar
-          </Button>
-        </form>
-        <Button
-          variant="outline"
-          onClick={shuffle}
-          disabled={!hasPlayers}
-          title="Embaralhar jogadores entre os times"
-        >
-          <Shuffle /> Embaralhar
-        </Button>
-      </div> */}
-
       {/* Teams grid: Blue | Roles | Red */}
       <div className="flex gap-4 justify-center items-start">
         {/* Blue team header + players */}
