@@ -107,7 +107,10 @@ export function InspectorPanel({
               <Label htmlFor="player-score">Elo</Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={14} className="text-muted-foreground cursor-help" />
+                  <Info
+                    size={14}
+                    className="text-muted-foreground cursor-help"
+                  />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="max-w-[220px]">
                   Pontuação que representa o nível de habilidade do jogador.
@@ -133,7 +136,10 @@ export function InspectorPanel({
               <Label htmlFor="player-k">Fator K</Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={14} className="text-muted-foreground cursor-help" />
+                  <Info
+                    size={14}
+                    className="text-muted-foreground cursor-help"
+                  />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="max-w-[220px]">
                   Controla o quanto o Elo muda a cada partida. Valores altos
