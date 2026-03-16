@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PlayersSidebar } from './compute/-players-sidebar'
-import { Simulator } from './compute/-simulator'
-import { WinProbabilities } from './compute/-win-probabilities'
+import { PlayersPanel } from '../components/panels/players'
+import { SimulatorPanel } from '../components/panels/simulator/simulator'
+import { BalancePanel } from '../components/panels/balance'
 import { useMatchBalancer } from '@/hooks/use-balancer'
 import { usePlayers } from '@/contexts/players-context'
-import { InspectorPanel } from '@/components/inspector-panel'
 import { useState } from 'react'
+import { InspectorPanel } from '@/components/panels/inspector'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -31,7 +31,7 @@ function RouteComponent() {
     <div className="w-full h-dvh p-4 flex gap-4">
       {/* Players list */}
       <div className="self-stretch shrink-0">
-        <PlayersSidebar
+        <PlayersPanel
           players={players}
           selectedPlayers={selectedPlayers}
           onDropFromTeam={handleDropOnSidebar}
@@ -42,7 +42,7 @@ function RouteComponent() {
       {/* Center container */}
       <div className="flex flex-1 justify-center items-center">
         <div className="flex-col gap-4">
-          <Simulator
+          <SimulatorPanel
             red={red}
             blue={blue}
             selectedPlayers={selectedPlayers}
@@ -51,7 +51,7 @@ function RouteComponent() {
             onSelectPlayer={setSelectedPlayerId}
           />
 
-          <WinProbabilities
+          <BalancePanel
             blue={blue}
             red={red}
             softBalance={softBalance}

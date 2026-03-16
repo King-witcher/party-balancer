@@ -4,7 +4,8 @@ import { Team } from '@/hooks/use-balancer'
 import { Crosshair, Flame, ShieldPlus, Swords, TreePine } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { SimulatorTeam } from './-simulator-team'
+import { SimulatorTeam } from './team'
+import { Panel } from '@/components/panel'
 
 export const ROLES = [
   { name: 'Top', icon: Swords },
@@ -27,7 +28,7 @@ type Props = {
   onSelectPlayer: (playerId: string) => void
 }
 
-export function Simulator({
+export function SimulatorPanel({
   red,
   blue,
   selectedPlayers,
@@ -48,7 +49,7 @@ export function Simulator({
   }
 
   return (
-    <div className="rounded-xl flex flex-col gap-6 p-6 w-fit border border-gray-200 bg-white shadow-md">
+    <Panel className="flex flex-col gap-6 p-6 w-fit">
       {/* Teams grid: Blue | Roles | Red */}
       <div className="flex gap-4 justify-center items-start">
         {/* Blue team header + players */}
@@ -127,6 +128,6 @@ export function Simulator({
           Vitória Vermelha
         </Button>
       </div>
-    </div>
+    </Panel>
   )
 }

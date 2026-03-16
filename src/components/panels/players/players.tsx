@@ -11,7 +11,7 @@ import { useMutation } from '@tanstack/react-query'
 import { Copy, Download, Search, Upload, UserPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import { PlayerCard } from './-player-card'
+import { PlayerCard } from './player-card'
 
 interface Props {
   players: PlayersMap
@@ -24,7 +24,7 @@ interface Props {
   onSelectPlayer: (playerId: string) => void
 }
 
-export function PlayersSidebar({
+export function PlayersPanel({
   players,
   selectedPlayers,
   onDropFromTeam,

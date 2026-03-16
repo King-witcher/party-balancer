@@ -11,7 +11,7 @@ interface Props {
   isFull: boolean
 }
 
-export function WinProbabilities({
+export function BalancePanel({
   blue,
   red,
   softBalance,
@@ -31,7 +31,7 @@ export function WinProbabilities({
   return (
     <div className="mt-8 border w-full border-gray-200 rounded-lg p-4 shadow-sm bg-white flex flex-col gap-4">
       <h2 className="text-3xl font-normal text-center text-black">
-        Probabilidades
+        Balanceamento
       </h2>
 
       {blue.some((p) => p === null) || red.some((p) => p === null) ? (
