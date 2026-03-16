@@ -19,7 +19,12 @@ function RouteComponent() {
       </h1>
 
       <div>
-        <Simulator red={red} blue={blue} setPlayer={setPlayer} shuffle={shuffle} />
+        <Simulator
+          red={red}
+          blue={blue}
+          setPlayer={setPlayer}
+          shuffle={shuffle}
+        />
 
         <WinProbabilities
           blue={blue}
