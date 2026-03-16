@@ -9,7 +9,7 @@ export const Route = createFileRoute('/compute')({
 })
 
 function RouteComponent() {
-  const { blue, red, isFull, setPlayer, hardBalance, softBalance } =
+  const { blue, red, isFull, setPlayer, hardBalance, softBalance, shuffle } =
     useMatchBalancer()
 
   return (
@@ -19,7 +19,7 @@ function RouteComponent() {
       </h1>
 
       <div>
-        <Simulator red={red} blue={blue} setPlayer={setPlayer} />
+        <Simulator red={red} blue={blue} setPlayer={setPlayer} shuffle={shuffle} />
 
         <WinProbabilities
           blue={blue}

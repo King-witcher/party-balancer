@@ -139,6 +139,24 @@ export function useMatchBalancer() {
     setRed(bestRed)
   }
 
+  function shuffle() {
+    const allPlayers = [...blue, ...red].filter((p) => p !== null)
+    for (let i = allPlayers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[allPlayers[i], allPlayers[j]] = [allPlayers[j], allPlayers[i]]
+    }
+    const newBlue: Team = [null, null, null, null, null]
+    const newRed: Team = [null, null, null, null, null]
+    for (let i = 0; i < Math.min(allPlayers.length, 5); i++) {
+      newBlue[i] = allPlayers[i]
+    }
+    for (let i = 5; i < Math.min(allPlayers.length, 10); i++) {
+      newRed[i - 5] = allPlayers[i]
+    }
+    setBlue(newBlue)
+    setRed(newRed)
+  }
+
   function getTeamsText(): string {
     return 'Blue:\n' + `${blue.join('\n')}\n` + '\nRed:\n' + `${red.join('\n')}`
   }
@@ -150,6 +168,7 @@ export function useMatchBalancer() {
     setPlayer,
     hardBalance,
     softBalance,
+    shuffle,
     getTeamsText,
   }
 }
