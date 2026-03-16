@@ -10,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Player, usePlayers } from '@/contexts/players-context'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 interface Props {
   playerName: string | null
@@ -19,6 +19,7 @@ interface Props {
 
 export function EditDialog({ playerName, onClose }: Props) {
   const { players, updatePlayer } = usePlayers()
+  const formId = useId()
   const playerToEdit = playerName ? players[playerName] : null
 
   function handleOpenChange(isOpen: boolean) {
@@ -39,12 +40,18 @@ export function EditDialog({ playerName, onClose }: Props) {
             Avoid manually calibrating rating params as much as possible.
           </DialogDescription>
         </DialogHeader>
-        <EditDialogInner initValue={playerToEdit!} onChange={handleSubmit} />
+        <EditDialogInner
+          formId={formId}
+          initValue={playerToEdit!}
+          onChange={handleSubmit}
+        />
         <DialogFooter>
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit" form={formId}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -52,6 +59,7 @@ export function EditDialog({ playerName, onClose }: Props) {
 }
 
 type EditDialogInnerProps = {
+  formId: string
   initValue?: Player
   onChange?: (data: Player) => void
 }
@@ -76,7 +84,7 @@ function EditDialogInner(props: EditDialogInnerProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form id={props.formId} onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <Label htmlFor="name">Name</Label>
         <Input
