@@ -1,5 +1,5 @@
 import { Combobox } from '@/components/ui/combobox'
-import { PlayersMap } from '@/contexts/players-context'
+import { PlayersMap, usePlayers } from '@/contexts/players-context'
 import { Team } from '@/hooks/use-balancer'
 
 interface Props {
@@ -23,6 +23,7 @@ export function SimulatorTeam({
   onSelectPlayer,
   setPlayer,
 }: Props) {
+  const { addPlayer } = usePlayers()
   function getDropHandler(
     currentPlayer: string | null,
     currentTeam: 'blue' | 'red',
@@ -79,6 +80,10 @@ export function SimulatorTeam({
                 label: player,
               }))}
               value={playerName || ''}
+              onCreateOption={(name) => {
+                addPlayer(name)
+                setPlayer(team, index, name)
+              }}
               buttonProps={{
                 draggable: true,
                 onDragStart: (e) => {
