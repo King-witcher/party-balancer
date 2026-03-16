@@ -15,7 +15,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { SimulatorTeam } from './-simulator-team'
 
-const ROLES = [
+export const ROLES = [
   { name: 'Top', icon: Swords },
   { name: 'Jungle', icon: TreePine },
   { name: 'Mid', icon: Flame },
@@ -26,21 +26,29 @@ const ROLES = [
 type Props = {
   blue: Team
   red: Team
+  selectedPlayers: string[]
   setPlayer: (
     team: 'blue' | 'red',
     index: number,
     playerName: string | null
   ) => void
   shuffle: () => void
+  onSelectPlayer: (playerId: string) => void
 }
 
-export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
+export function Simulator({
+  red,
+  blue,
+  selectedPlayers,
+  setPlayer,
+  shuffle,
+  onSelectPlayer,
+}: Props) {
   const [buttonsDisabled, setButtonsDisabled] = useState(false)
   const [playerToCreate, setPlayerToCreate] = useState('')
 
-  const { players, computeResult, addPlayer } = usePlayers()
+  const { playersMap: players, computeResult, addPlayer } = usePlayers()
 
-  const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
   const hasPlayers = selectedPlayers.length >= 2
 
   function handleAddPlayer(event: React.FormEvent<HTMLFormElement>) {
@@ -71,16 +79,16 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
             required
           />
           <Button type="submit">
-            <Plus /> Add
+            <Plus /> Adicionar
           </Button>
         </form>
         <Button
           variant="outline"
           onClick={shuffle}
           disabled={!hasPlayers}
-          title="Randomly shuffle players between teams"
+          title="Embaralhar jogadores entre os times"
         >
-          <Shuffle /> Shuffle
+          <Shuffle /> Embaralhar
         </Button>
       </div>
 
@@ -89,7 +97,7 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
         {/* Blue team header + players */}
         <div className="flex flex-col items-center gap-3">
           <h3 className="text-sm font-bold uppercase tracking-wider text-blue-600">
-            Blue Team
+            Ordem
           </h3>
           <SimulatorTeam
             allPlayers={players}
@@ -97,13 +105,14 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
             team="blue"
             setPlayer={setPlayer}
             teamPlayers={blue}
+            onSelectPlayer={onSelectPlayer}
           />
         </div>
 
         {/* Roles column */}
         <div className="flex flex-col items-center gap-3">
           <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400">
-            Role
+            Lane
           </h3>
           {ROLES.map((role) => (
             <div
@@ -121,7 +130,7 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
         {/* Red team header + players */}
         <div className="flex flex-col items-center gap-3">
           <h3 className="text-sm font-bold uppercase tracking-wider text-red-600">
-            Red Team
+            Caos
           </h3>
           <SimulatorTeam
             allPlayers={players}
@@ -129,6 +138,7 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
             team="red"
             setPlayer={setPlayer}
             teamPlayers={red}
+            onSelectPlayer={onSelectPlayer}
           />
         </div>
       </div>
@@ -145,7 +155,7 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
             buttonsDisabled
           }
         >
-          Blue Wins
+          Vitória Azul
         </Button>
         <Button
           size="lg"
@@ -157,7 +167,7 @@ export function Simulator({ red, blue, setPlayer, shuffle }: Props) {
             buttonsDisabled
           }
         >
-          Red Wins
+          Vitória Vermelha
         </Button>
       </div>
     </div>

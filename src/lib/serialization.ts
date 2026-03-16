@@ -1,6 +1,6 @@
-import type { PlayerSet } from '@/contexts/players-context'
+import type { PlayersMap } from '@/contexts/players-context'
 
-export function exportPlayers(players: PlayerSet) {
+export function exportPlayers(players: PlayersMap) {
   const blob = new Blob([JSON.stringify(players)], { type: 'text/plain' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -13,7 +13,7 @@ export function exportPlayers(players: PlayerSet) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: Type testing
-function validatePlayerSet(data: any): data is PlayerSet {
+function validatePlayerSet(data: any): data is PlayersMap {
   if (typeof data !== 'object' || data === null) return false
   for (const name in data) {
     const player = data[name]
@@ -33,7 +33,7 @@ function validatePlayerSet(data: any): data is PlayerSet {
   return true
 }
 
-export async function importPlayers(): Promise<PlayerSet> {
+export async function importPlayers(): Promise<PlayersMap> {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = '.json'

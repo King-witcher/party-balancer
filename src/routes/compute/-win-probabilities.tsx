@@ -18,7 +18,7 @@ export function WinProbabilities({
   hardBalance,
   isFull,
 }: Props) {
-  const { players, odds } = usePlayers()
+  const { playersMap: players, odds } = usePlayers()
   const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
 
   const blueOdds = useMemo(() => {
@@ -31,12 +31,12 @@ export function WinProbabilities({
   return (
     <div className="mt-8 border w-full border-gray-200 rounded-lg p-4 shadow-sm bg-white flex flex-col gap-4">
       <h2 className="text-3xl font-normal text-center text-black">
-        Win Probability
+        Probabilidades
       </h2>
 
       {blue.some((p) => p === null) || red.some((p) => p === null) ? (
         <div className="text-center text-gray-600 py-2">
-          Please select all players to see win probability
+          Selecione todos os jogadores para ver a probabilidade de vitória
         </div>
       ) : (
         <div className="flex items-center">
@@ -76,19 +76,19 @@ export function WinProbabilities({
             type="button"
             className="w-full gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-medium rounded-md shadow-md hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center transition-all duration-300"
             onClick={softBalance}
-            title="Makes minimal changes to balance teams"
+            title="Faz alterações mínimas para balancear os times"
           >
             <Scale />
-            Soft Balance Teams
+            Balancear lanes
           </button>
           <button
             type="button"
             className="w-full gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-medium rounded-md shadow-md hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 flex items-center justify-center transition-all duration-300"
             onClick={hardBalance}
-            title="Optimizes team balance completely"
+            title="Faz alterações completas para balancear os times"
           >
             <Weight />
-            Hard Balance Teams
+            Balancear totalmente
           </button>
         </div>
       )}

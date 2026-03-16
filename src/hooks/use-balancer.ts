@@ -10,7 +10,7 @@ export type Team = [
 ]
 
 export function useMatchBalancer() {
-  const { players } = usePlayers()
+  const { playersMap: players } = usePlayers()
 
   const [blue, setBlue] = useState<Team>([null, null, null, null, null])
   const [red, setRed] = useState<Team>([null, null, null, null, null])

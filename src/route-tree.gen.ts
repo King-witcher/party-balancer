@@ -11,23 +11,9 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PlayersRouteImport } from './routes/players/route'
-import { Route as ComputeRouteImport } from './routes/compute/route'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
-
-const PlayersRouteRoute = PlayersRouteImport.update({
-  id: '/players',
-  path: '/players',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ComputeRouteRoute = ComputeRouteImport.update({
-  id: '/compute',
-  path: '/compute',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -46,20 +32,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/compute': {
-      id: '/compute'
-      path: '/compute'
-      fullPath: '/compute'
-      preLoaderRoute: typeof ComputeRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/players': {
-      id: '/players'
-      path: '/players'
-      fullPath: '/players'
-      preLoaderRoute: typeof PlayersRouteImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -67,42 +39,32 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/compute': typeof ComputeRouteRoute
-  '/players': typeof PlayersRouteRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/compute': typeof ComputeRouteRoute
-  '/players': typeof PlayersRouteRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/compute': typeof ComputeRouteRoute
-  '/players': typeof PlayersRouteRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/compute' | '/players'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/compute' | '/players'
-  id: '__root__' | '/' | '/compute' | '/players'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ComputeRouteRoute: typeof ComputeRouteRoute
-  PlayersRouteRoute: typeof PlayersRouteRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ComputeRouteRoute: ComputeRouteRoute,
-  PlayersRouteRoute: PlayersRouteRoute,
 }
 
 export const routeTree = rootRoute
@@ -115,19 +77,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/compute",
-        "/players"
+        "/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/compute": {
-      "filePath": "compute/route.tsx"
-    },
-    "/players": {
-      "filePath": "players/route.tsx"
     }
   }
 }

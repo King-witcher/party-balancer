@@ -1,12 +1,13 @@
 import { Combobox } from '@/components/ui/combobox'
-import { PlayerSet } from '@/contexts/players-context'
+import { PlayersMap } from '@/contexts/players-context'
 import { Team } from '@/hooks/use-balancer'
 
 interface Props {
   teamPlayers: Team
-  allPlayers: PlayerSet
+  allPlayers: PlayersMap
   team: 'blue' | 'red'
   selectedPlayers: string[]
+  onSelectPlayer: (playerId: string) => void
   setPlayer: (
     team: 'blue' | 'red',
     index: number,
@@ -19,6 +20,7 @@ export function SimulatorTeam({
   team,
   allPlayers,
   selectedPlayers,
+  onSelectPlayer,
   setPlayer,
 }: Props) {
   function getDropHandler(
@@ -28,11 +30,15 @@ export function SimulatorTeam({
   ) {
     return (e: React.DragEvent<HTMLButtonElement>) => {
       const droppedPlayer = e.dataTransfer.getData('player')
-      const droppedTeam = e.dataTransfer.getData('team') as 'blue' | 'red'
+      const droppedTeam = e.dataTransfer.getData('team')
       const droppedIndex = Number(e.dataTransfer.getData('index'))
 
       setPlayer(currentTeam, currentIndex, droppedPlayer || null)
-      setPlayer(droppedTeam, droppedIndex, currentPlayer || null)
+
+      // Only swap back if the source was a team slot, not the sidebar
+      if (droppedTeam === 'blue' || droppedTeam === 'red') {
+        setPlayer(droppedTeam, droppedIndex, currentPlayer || null)
+      }
     }
   }
 
@@ -42,6 +48,12 @@ export function SimulatorTeam({
     playerName: string | null
   ) {
     setPlayer(team, playerIndex, playerName)
+  }
+
+  function handleClickPlayer(playerName: string | null) {
+    if (playerName) {
+      onSelectPlayer(playerName)
+    }
   }
 
   return (
@@ -76,6 +88,7 @@ export function SimulatorTeam({
                 },
                 onDragOver: (e) => e.preventDefault(),
                 onDrop: getDropHandler(playerName || null, team, index),
+                onClick: () => handleClickPlayer(playerName),
               }}
               onChange={(value) => handleChangeSelect(team, index, value)}
             />

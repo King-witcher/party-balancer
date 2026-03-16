@@ -1,21 +1,16 @@
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, use, type ReactNode } from 'react'
 import type { Team } from '../hooks/use-balancer'
 import { useLocalStorage } from '../hooks/use-local-storage'
 import { exportPlayers, importPlayers } from '@/lib/serialization'
-
-export type Player = {
-  name: string
-  k: number
-  score: number
-}
+import { Player } from '@/types/player'
 
 export const INITIAL_K_FACTOR = 150 // K-factor for Elo rating
 export const FINAL_K_FACTOR = 32 // Final K-factor for Elo rating
 
-export type PlayerSet = Record<string, Player>
+export type PlayersMap = Record<string, Player>
 
 type PlayersData = {
-  players: PlayerSet
+  playersMap: PlayersMap
   addPlayer: (name: string) => void
   removePlayer: (name: string) => void
   getList: () => string
@@ -31,10 +26,10 @@ interface Props {
   children?: ReactNode
 }
 
-const PlayersContext = createContext<PlayersData>({} as PlayersData)
+const PlayersContext = createContext<PlayersData | null>(null)
 
 export function PlayersProvider({ children }: Props) {
-  const [players, setPlayers] = useLocalStorage<PlayerSet>('playerbase', {})
+  const [players, setPlayers] = useLocalStorage<PlayersMap>('playerbase', {})
 
   function addPlayer(name: string) {
     if (players[name]) {
@@ -64,7 +59,7 @@ export function PlayersProvider({ children }: Props) {
     const sorted = unsorted.sort((a, b) => b.score - a.score)
     return sorted.reduce((prev, current, index) => {
       let line = `${prev}\n#${index + 1}: ${current.name} - ${Math.round(current.score)}`
-      if (current.k > 100) line += ' (?)'
+      if (current.k > 90) line += ' (?)'
       return line
     }, '')
   }
@@ -155,7 +150,7 @@ export function PlayersProvider({ children }: Props) {
   return (
     <PlayersContext.Provider
       value={{
-        players,
+        playersMap: players,
         addPlayer,
         removePlayer,
         getList,
@@ -172,4 +167,10 @@ export function PlayersProvider({ children }: Props) {
   )
 }
 
-export const usePlayers = () => useContext(PlayersContext)
+export function usePlayers() {
+  const context = use(PlayersContext)
+  if (!context) {
+    throw new Error('usePlayers must be used within a PlayersProvider')
+  }
+  return context
+}
