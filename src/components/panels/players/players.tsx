@@ -106,10 +106,10 @@ export function PlayersPanel({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       data-dragover={isDragOver}
-      className="flex flex-col h-full gap-2 p-4 rounded-xl border border-gray-200 bg-white shadow-md w-[320px] transition-colors data-[dragover=true]:border-primary data-[dragover=true]:bg-primary/5"
+      className="flex flex-col h-full gap-2 p-4 rounded-xl border border-border bg-card shadow-md w-[320px] transition-colors data-[dragover=true]:border-primary data-[dragover=true]:bg-primary/5"
     >
       <div className="flex items-center justify-between mb-1">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
           Jogadores
         </h3>
         <div className="flex gap-1">
@@ -162,7 +162,7 @@ export function PlayersPanel({
         <div className="relative flex-1">
           <Search
             size={14}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
           />
           <Input
             type="text"
@@ -192,7 +192,7 @@ export function PlayersPanel({
 
       <div className="flex-1 overflow-y-auto flex flex-col gap-2 min-h-0">
         {availablePlayers.length === 0 ? (
-          <p className="text-xs text-gray-400 text-center py-4">
+          <p className="text-xs text-muted-foreground text-center py-4">
             {Object.keys(players).length === 0
               ? 'No players created yet'
               : search.trim()

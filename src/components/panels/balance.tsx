@@ -29,31 +29,31 @@ export function BalancePanel({
   }, [blue, red, players])
 
   return (
-    <div className="mt-8 border w-full border-gray-200 rounded-lg p-4 shadow-sm bg-white flex flex-col gap-4">
-      <h2 className="text-3xl font-normal text-center text-black">
+    <div className="mt-8 border w-full border-border rounded-lg p-4 shadow-sm bg-card flex flex-col gap-4">
+      <h2 className="text-3xl font-normal text-center text-foreground">
         Balanceamento
       </h2>
 
       {blue.some((p) => p === null) || red.some((p) => p === null) ? (
-        <div className="text-center text-gray-600 py-2">
+        <div className="text-center text-muted-foreground py-2">
           Selecione todos os jogadores para ver a probabilidade de vitória
         </div>
       ) : (
         <div className="flex items-center">
           {/* Blue Team */}
           <div className="w-1/2 text-center">
-            <div className="font-bold text-xl text-blue-800">Blue Team</div>
+            <div className="font-bold text-xl text-blue-400">Blue Team</div>
             <div className="text-2xl font-bold">
               {blueOdds ? `${Math.round(blueOdds * 100)}%` : '50%'}
             </div>
           </div>
 
           {/* Divider */}
-          <div className="text-2xl font-semibold text-gray-500">vs</div>
+          <div className="text-2xl font-semibold text-muted-foreground">vs</div>
 
           {/* Red Team */}
           <div className="w-1/2 text-center">
-            <div className="font-bold text-xl text-red-800">Red Team</div>
+            <div className="font-bold text-xl text-red-400">Red Team</div>
             <div className="text-2xl font-bold">
               {blueOdds ? `${Math.round((1 - blueOdds) * 100)}%` : '50%'}
             </div>
@@ -62,7 +62,7 @@ export function BalancePanel({
       )}
 
       {/* Probability Bar */}
-      <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-4 bg-muted rounded-full overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-blue-600 to-red-600 transition-all duration-300"
           style={{

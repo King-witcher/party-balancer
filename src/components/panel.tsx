@@ -7,7 +7,7 @@ export function Panel({ className, children, ...rest }: Props) {
   return (
     <div
       className={cn(
-        'p-4 rounded-xl border border-gray-200 bg-white shadow-md',
+        'p-4 rounded-xl border border-border bg-card shadow-md',
         className
       )}
       {...rest}

@@ -88,7 +88,7 @@ export function InspectorPanel({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 h-full"
         >
-          <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
             Inspecionar
           </h2>
 
@@ -107,7 +107,7 @@ export function InspectorPanel({
               <Label htmlFor="player-score">Elo</Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={14} className="text-gray-400 cursor-help" />
+                  <Info size={14} className="text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="max-w-[220px]">
                   Pontuação que representa o nível de habilidade do jogador.
@@ -133,7 +133,7 @@ export function InspectorPanel({
               <Label htmlFor="player-k">Fator K</Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Info size={14} className="text-gray-400 cursor-help" />
+                  <Info size={14} className="text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent side="right" className="max-w-[220px]">
                   Controla o quanto o Elo muda a cada partida. Valores altos
@@ -174,7 +174,7 @@ export function InspectorPanel({
           </div>
         </form>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2">
+        <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-2">
           <p className="text-sm">Selecione um jogador para inspecionar</p>
         </div>
       )}

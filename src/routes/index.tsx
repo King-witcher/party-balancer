@@ -28,7 +28,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="w-full h-dvh p-4 flex gap-4">
+    <div className="w-full h-dvh p-4 flex gap-4 bg-background text-foreground">
       {/* Players list */}
       <div className="self-stretch shrink-0">
         <PlayersPanel

@@ -54,7 +54,7 @@ export function SimulatorPanel({
       <div className="flex gap-4 justify-center items-start">
         {/* Blue team header + players */}
         <div className="flex flex-col items-center gap-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-blue-600">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-blue-400">
             Ordem
           </h3>
           <SimulatorTeam
@@ -69,13 +69,13 @@ export function SimulatorPanel({
 
         {/* Roles column */}
         <div className="flex flex-col items-center gap-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
             Lane
           </h3>
           {ROLES.map((role) => (
             <div
               key={role.name}
-              className="h-10 flex items-center justify-center gap-1.5 text-gray-500"
+              className="h-10 flex items-center justify-center gap-1.5 text-muted-foreground"
             >
               <role.icon size={18} className="shrink-0" />
               <span className="text-xs font-semibold uppercase tracking-wide min-w-[42px] text-center">
@@ -87,7 +87,7 @@ export function SimulatorPanel({
 
         {/* Red team header + players */}
         <div className="flex flex-col items-center gap-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-red-600">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-red-400">
             Caos
           </h3>
           <SimulatorTeam

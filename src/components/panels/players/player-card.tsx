@@ -23,11 +23,11 @@ export function PlayerCard({ player, ...rest }: Props) {
         e.dataTransfer.setData('team', 'sidebar')
         e.dataTransfer.setData('index', '-1')
       }}
-      className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg border border-gray-200 bg-white shadow-sm cursor-grab active:cursor-grabbing hover:border-gray-300 hover:shadow transition-all select-none"
+      className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg border border-border bg-card shadow-sm cursor-grab active:cursor-grabbing hover:border-muted-foreground/30 hover:shadow transition-all select-none"
     >
       <span className="text-sm font-medium truncate">{player.name}</span>
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-xs text-gray-500 font-semibold tabular-nums">
+        <span className="text-xs text-muted-foreground font-semibold tabular-nums">
           {Math.round(player.score)}
         </span>
         <Tooltip>
