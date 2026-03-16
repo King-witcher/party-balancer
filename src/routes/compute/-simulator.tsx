@@ -32,21 +32,11 @@ export function Simulator({
   blue,
   selectedPlayers,
   setPlayer,
-  shuffle,
   onSelectPlayer,
 }: Props) {
   const [buttonsDisabled, setButtonsDisabled] = useState(false)
-  const [playerToCreate, setPlayerToCreate] = useState('')
 
-  const { playersMap: players, computeResult, addPlayer } = usePlayers()
-
-  const hasPlayers = selectedPlayers.length >= 2
-
-  function handleAddPlayer(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    addPlayer(playerToCreate)
-    setPlayerToCreate('')
-  }
+  const { playersMap: players, computeResult } = usePlayers()
 
   function handleComputeResult(winners: Team, losers: Team) {
     setButtonsDisabled(true)
