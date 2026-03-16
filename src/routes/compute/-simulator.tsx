@@ -1,16 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { usePlayers } from '@/contexts/players-context'
 import { Team } from '@/hooks/use-balancer'
-import {
-  Crosshair,
-  Flame,
-  Plus,
-  ShieldPlus,
-  Shuffle,
-  Swords,
-  TreePine,
-} from 'lucide-react'
+import { Crosshair, Flame, ShieldPlus, Swords, TreePine } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { SimulatorTeam } from './-simulator-team'
@@ -69,7 +60,7 @@ export function Simulator({
   return (
     <div className="rounded-xl flex flex-col gap-6 p-6 w-fit border border-gray-200 bg-white shadow-md">
       {/* Add player form + shuffle */}
-      <div className="flex gap-3 items-center">
+      {/* <div className="flex gap-3 items-center">
         <form onSubmit={handleAddPlayer} className="flex gap-3 flex-1">
           <Input
             type="text"
@@ -90,7 +81,7 @@ export function Simulator({
         >
           <Shuffle /> Embaralhar
         </Button>
-      </div>
+      </div> */}
 
       {/* Teams grid: Blue | Roles | Red */}
       <div className="flex gap-4 justify-center items-start">
