@@ -6,11 +6,11 @@ type JsonSerializerConfig<T> = {
   schema?: z.ZodType<T>
 }
 
-export class JsonSerializer<T> implements ISerializer<T> {
+export class JsonSerializer<T = unknown> implements ISerializer<T> {
   private readonly prettyPrint: boolean
   private readonly schema?: z.ZodType<T>
 
-  constructor(config: JsonSerializerConfig<T>) {
+  constructor(config: JsonSerializerConfig<T> = {}) {
     this.prettyPrint = config.prettyPrint || false
     this.schema = config.schema
   }

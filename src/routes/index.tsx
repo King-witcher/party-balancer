@@ -6,22 +6,17 @@ import { useMatchBalancer } from '@/hooks/use-balancer'
 import { useState } from 'react'
 import { InspectorPanel } from '@/components/panels/inspector'
 import { JsonSerializer } from '@/lib/serialization/json-serializer'
-import z from 'zod'
+import { VersionedSerializer } from '@/lib/serialization/versioned-serializer'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
-const ioSerializer = new JsonSerializer({
-  prettyPrint: true,
-  schema: z.array(
-    z.object({
-      name: z.string(),
-      k: z.number(),
-      score: z.number(),
-    })
-  ),
-})
+const ioSerializer = new VersionedSerializer(
+  new JsonSerializer({
+    prettyPrint: true,
+  })
+)
 
 function RouteComponent() {
   const { blue, red, isFull, setPlayer, hardBalance, softBalance, shuffle } =
