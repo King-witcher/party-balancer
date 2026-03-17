@@ -1,12 +1,7 @@
 import { Team } from '@/hooks/use-balancer'
 import { Crosshair, Flame, ShieldPlus, Swords, TreePine } from 'lucide-react'
-import { useState } from 'react'
-import { toast } from 'sonner'
 import { SimulatorTeam } from './team'
 import { Panel } from '@/components/panel'
-import { usePlayerStore } from '@/contexts/player-store/player-store-context'
-import { useRatingSystem } from '@/contexts/rating-system-context'
-import { DynamicKRating } from '@/lib/rating-system/dynamic-k-elo-system'
 
 export const ROLES = [
   { name: 'Top', icon: Swords },
@@ -36,72 +31,6 @@ export function SimulatorPanel({
   setPlayer,
   onSelectPlayer,
 }: Props) {
-  const [buttonsDisabled, setButtonsDisabled] = useState(false)
-
-  const playerStore = usePlayerStore()
-  const ratingSystem = useRatingSystem()
-
-  async function handleComputeResult(winners: Team, losers: Team) {
-    setButtonsDisabled(true)
-
-    function getRatings(team: Team): DynamicKRating[] {
-      const ratings = team
-        .filter((id) => id !== null)
-        .map((id): DynamicKRating => {
-          const player = playerStore.playersMap[id]
-          return {
-            power: player.score,
-            kFactor: player.k,
-          }
-        })
-
-      if (ratings.length !== 5) {
-        throw new Error(
-          'Each team must have exactly 5 players to compute results.'
-        )
-      }
-      return ratings
-    }
-
-    const winnerPlayers = getRatings(winners)
-    const loserPlayers = getRatings(losers)
-
-    const [newWinners, newLosers] = ratingSystem.computeTeams(
-      winnerPlayers,
-      loserPlayers,
-      1
-    )
-
-    await Promise.all([
-      ...winners.map((id, index) => {
-        if (id === null) return Promise.resolve()
-        const player = playerStore.playersMap[id]
-        const newRating = newWinners[index]
-        return playerStore.update(id, {
-          ...player,
-          score: newRating.power,
-          k: newRating.kFactor,
-        })
-      }),
-
-      ...losers.map((id, index) => {
-        if (id === null) return Promise.resolve()
-        const player = playerStore.playersMap[id]
-        const newRating = newLosers[index]
-        return playerStore.update(id, {
-          ...player,
-          score: newRating.power,
-          k: newRating.kFactor,
-        })
-      }),
-    ])
-
-    toast.success('Match result computed successfully!')
-    setTimeout(() => {
-      setButtonsDisabled(false)
-    }, 1000)
-  }
-
   return (
     <Panel className="flex flex-col gap-6 p-6 w-fit">
       {/* Teams grid: Blue | Roles | Red */}
@@ -152,34 +81,6 @@ export function SimulatorPanel({
           />
         </div>
       </div>
-
-      {/* Compute victory buttons */}
-      {/* <div className="flex gap-4 justify-between">
-        <Button
-          size="lg"
-          className="flex-1 bg-blue-600 hover:bg-blue-700"
-          onClick={() => handleComputeResult(blue, red)}
-          disabled={
-            red.some((p) => p === null) ||
-            blue.some((p) => p === null) ||
-            buttonsDisabled
-          }
-        >
-          Vitória Azul
-        </Button>
-        <Button
-          size="lg"
-          className="flex-1 bg-red-600 hover:bg-red-700"
-          onClick={() => handleComputeResult(red, blue)}
-          disabled={
-            red.some((p) => p === null) ||
-            blue.some((p) => p === null) ||
-            buttonsDisabled
-          }
-        >
-          Vitória Vermelha
-        </Button>
-      </div> */}
     </Panel>
   )
 }

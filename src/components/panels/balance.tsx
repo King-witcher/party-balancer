@@ -7,6 +7,8 @@ import { usePlayerStore } from '@/contexts/player-store/player-store-context'
 import { useRatingSystem } from '@/contexts/rating-system-context'
 import { DynamicKRating } from '@/lib/rating-system/dynamic-k-elo-system'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { useComputeResult } from '@/hooks/use-ranks-computer'
+import { PopoverClose } from '@radix-ui/react-popover'
 
 interface Props {
   blue: Team
@@ -27,6 +29,16 @@ export function BalancePanel({
 }: Props) {
   const playerStore = usePlayerStore()
   const ratingSystem = useRatingSystem()
+
+  const computeResult = useComputeResult()
+
+  function handleComputeResult(winner: 'blue' | 'red') {
+    if (winner === 'blue') {
+      computeResult(blue, red)
+    } else {
+      computeResult(red, blue)
+    }
+  }
 
   const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
 
@@ -49,7 +61,7 @@ export function BalancePanel({
       }
     })
     return ratingSystem.expectedTeams(blueRanks, redRanks)
-  }, [blue, red, ratingSystem])
+  }, [blue, red, ratingSystem, playerStore.playersMap])
 
   return (
     <Panel className="w-full flex flex-col gap-4">
@@ -148,18 +160,23 @@ export function BalancePanel({
                 Escolha o vencedor
               </h3>
               <div className="flex gap-2">
-                <Button
-                  onClick={softBalance}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
-                >
-                  Ordem
-                </Button>
-                <Button
-                  onClick={hardBalance}
-                  className="flex-1 bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
-                >
-                  Caos
-                </Button>
+                <PopoverClose asChild>
+                  <Button
+                    onClick={() => handleComputeResult('blue')}
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                  >
+                    Ordem
+                  </Button>
+                </PopoverClose>
+
+                <PopoverClose asChild>
+                  <Button
+                    onClick={() => handleComputeResult('red')}
+                    className="flex-1 bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
+                  >
+                    Caos
+                  </Button>
+                </PopoverClose>
               </div>
             </PopoverContent>
           </Popover>
