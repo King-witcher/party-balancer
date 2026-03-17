@@ -13,9 +13,18 @@ const v1Schema = z.record(z.string(), playerSchema).refine((record) => {
 }, 'Player names must be equal to their keys')
 
 const v2Schema = z.object({
-  version: z.literal(2),
-  players: z.array(playerSchema),
+  v: z.literal(2),
+  d: z.array(
+    z.tuple([
+      z.string(), // Name
+      z.number(), // Raing
+      z.number(), // K
+    ])
+  ),
 })
+
+type SerializedV1 = z.infer<typeof v1Schema>
+type SerializedV2 = z.infer<typeof v2Schema>
 
 export class VersionedSerializer implements ISerializer<PlayerRow[]> {
   private decoree: ISerializer<unknown>
@@ -28,7 +37,13 @@ export class VersionedSerializer implements ISerializer<PlayerRow[]> {
     const parsed = this.decoree.deserialize(serializedData)
     const parsedV2 = v2Schema.safeParse(parsed)
     if (parsedV2.success) {
-      return parsedV2.data.players
+      return parsedV2.data.d.map(
+        ([name, raing, k]): PlayerRow => ({
+          name,
+          score: raing,
+          k,
+        })
+      )
     }
     const parsedV1 = v1Schema.safeParse(parsed)
     if (parsedV1.success) {
@@ -38,10 +53,17 @@ export class VersionedSerializer implements ISerializer<PlayerRow[]> {
   }
 
   serialize(data: PlayerRow[]): string {
-    const toSerialize = {
-      version: 2,
-      players: data,
+    const rouned = data.map((p): SerializedV2['d'][number] => [
+      p.name,
+      Math.round(p.score),
+      Math.round(p.k),
+    ])
+
+    const toSerialize: SerializedV2 = {
+      v: 2,
+      d: rouned,
     }
+
     return this.decoree.serialize(toSerialize)
   }
 }

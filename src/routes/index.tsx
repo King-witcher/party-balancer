@@ -14,7 +14,7 @@ export const Route = createFileRoute('/')({
 
 const ioSerializer = new VersionedSerializer(
   new JsonSerializer({
-    prettyPrint: true,
+    prettyPrint: false,
   })
 )
 
