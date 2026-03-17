@@ -93,15 +93,6 @@ export function BalancePanel({
       </div>
       {isFull && (
         <div className="flex flex-col sm:flex-row gap-4 mt-4">
-          {/* <button
-            type="button"
-            className="w-full gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-medium rounded-md shadow-md hover:from-blue-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center transition-all duration-300"
-            onClick={softBalance}
-            title="Faz alterações mínimas para balancear os times"
-          >
-            <Scale />
-            Balancear lanes
-          </button> */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -116,43 +107,59 @@ export function BalancePanel({
               <h3 className="text-md font-medium text-center mb-1">
                 Preservar as lanes escolhidas?
               </h3>
-              <Button
-                onClick={softBalance}
-                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
-              >
-                Preservar
-              </Button>
-              <Button
-                onClick={hardBalance}
-                className="bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
-              >
-                Ignorar
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={softBalance}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                >
+                  Preservar
+                </Button>
+                <Button
+                  onClick={hardBalance}
+                  className="flex-1 bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
+                >
+                  Ignorar
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
           <Button
             size="lg"
-            className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white"
+            className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
           >
             <Shuffle />
             Sortear
           </Button>
-          <Button
-            size="lg"
-            className="bg-gradient-to-r ml-auto from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white"
-          >
-            <RulerDimensionLine />
-            Computar resultado
-          </Button>
-          {/* <button
-            type="button"
-            className="w-full gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-medium rounded-md shadow-md hover:from-purple-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 flex items-center justify-center transition-all duration-300"
-            onClick={hardBalance}
-            title="Faz alterações completas para balancear os times"
-          >
-            <Weight />
-            Balancear totalmente
-          </button> */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r ml-auto from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white"
+              >
+                <RulerDimensionLine />
+                Computar resultado
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-center mb-1">
+                Escolha o vencedor
+              </h3>
+              <div className="flex gap-2">
+                <Button
+                  onClick={softBalance}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+                >
+                  Ordem
+                </Button>
+                <Button
+                  onClick={hardBalance}
+                  className="flex-1 bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
+                >
+                  Caos
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       )}
     </Panel>
