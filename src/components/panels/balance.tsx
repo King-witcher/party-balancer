@@ -13,6 +13,7 @@ interface Props {
   red: Team
   softBalance: () => void
   hardBalance: () => void
+  shuffle: () => void
   isFull: boolean
 }
 
@@ -21,6 +22,7 @@ export function BalancePanel({
   red,
   softBalance,
   hardBalance,
+  shuffle,
   isFull,
 }: Props) {
   const playerStore = usePlayerStore()
@@ -125,6 +127,7 @@ export function BalancePanel({
           </Popover>
           <Button
             size="lg"
+            onClick={shuffle}
             className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
           >
             <Shuffle />

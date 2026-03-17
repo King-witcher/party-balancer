@@ -53,6 +53,7 @@ function RouteComponent() {
             red={red}
             softBalance={softBalance}
             hardBalance={hardBalance}
+            shuffle={shuffle}
             isFull={isFull}
           />
 
