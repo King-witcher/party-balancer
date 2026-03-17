@@ -6,6 +6,7 @@ import { Button } from '../ui/button'
 import { usePlayerStore } from '@/contexts/player-store/player-store-context'
 import { useRatingSystem } from '@/contexts/rating-system-context'
 import { DynamicKRating } from '@/lib/rating-system/dynamic-k-elo-system'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 interface Props {
   blue: Team
@@ -101,13 +102,34 @@ export function BalancePanel({
             <Scale />
             Balancear lanes
           </button> */}
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
-          >
-            <Scale />
-            Balancear
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+              >
+                <Scale />
+                Balancear
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-center mb-1">
+                Preservar as lanes escolhidas?
+              </h3>
+              <Button
+                onClick={softBalance}
+                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+              >
+                Preservar
+              </Button>
+              <Button
+                onClick={hardBalance}
+                className="bg-gradient-to-r from-red-700 to-orange-600 hover:from-red-800 hover:to-orange-700 text-white"
+              >
+                Ignorar
+              </Button>
+            </PopoverContent>
+          </Popover>
           <Button
             size="lg"
             className="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white"
