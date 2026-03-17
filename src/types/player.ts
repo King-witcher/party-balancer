@@ -1,6 +1,5 @@
-export type Player = {
-  // Primary Key
-  name: string
+export type PlayerRow = {
+  name: string // Primary Key
   k: number
   score: number
 }

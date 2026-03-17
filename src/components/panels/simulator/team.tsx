@@ -1,10 +1,11 @@
 import { Combobox } from '@/components/ui/combobox'
-import { PlayersMap, usePlayers } from '@/contexts/players-context'
+import { usePlayerStore } from '@/contexts/player-store/player-store-context'
+import { useRatingSystem } from '@/contexts/rating-system-context'
 import { Team } from '@/hooks/use-balancer'
+import { useMemo } from 'react'
 
 interface Props {
   teamPlayers: Team
-  allPlayers: PlayersMap
   team: 'blue' | 'red'
   selectedPlayers: string[]
   onSelectPlayer: (playerId: string) => void
@@ -18,12 +19,17 @@ interface Props {
 export function SimulatorTeam({
   teamPlayers,
   team,
-  allPlayers,
   selectedPlayers,
   onSelectPlayer,
   setPlayer,
 }: Props) {
-  const { addPlayer } = usePlayers()
+  const playerStore = usePlayerStore()
+  const ratingSystem = useRatingSystem()
+
+  const initialRating = useMemo(() => {
+    return ratingSystem.getInitialRating()
+  }, [])
+
   function getDropHandler(
     currentPlayer: string | null,
     currentTeam: 'blue' | 'red',
@@ -60,12 +66,17 @@ export function SimulatorTeam({
   return (
     <div className="flex flex-col gap-3">
       {teamPlayers.map((playerName, index) => {
-        const availablePlayerNames = Object.keys(allPlayers).filter(
-          (name) => playerName === name || !selectedPlayers.includes(name)
-        )
+        const availablePlayerNames = playerStore.playersList
+          .filter(
+            (player) =>
+              playerName === player.name ||
+              !selectedPlayers.includes(player.name)
+          )
+          .map((p) => p.name)
 
-        const currentPlayer =
-          Object.values(allPlayers).find((p) => p.name === playerName) || null
+        const currentPlayer = playerName
+          ? (playerStore.playersMap[playerName] ?? null)
+          : null
 
         return (
           <div
@@ -81,7 +92,11 @@ export function SimulatorTeam({
               }))}
               value={playerName || ''}
               onCreateOption={(name) => {
-                addPlayer(name)
+                playerStore.create({
+                  name,
+                  score: initialRating.power,
+                  k: initialRating.kFactor,
+                })
                 setPlayer(team, index, name)
               }}
               buttonProps={{
@@ -98,7 +113,7 @@ export function SimulatorTeam({
               onChange={(value) => handleChangeSelect(team, index, value)}
             />
             <span className="w-[40px] font-semibold text-end">
-              {Math.round(currentPlayer?.score || 0) || ''}
+              {currentPlayer ? Math.round(currentPlayer.score) : ''}
             </span>
           </div>
         )

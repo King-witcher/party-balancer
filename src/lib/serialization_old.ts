@@ -1,4 +1,4 @@
-import type { PlayersMap } from '@/contexts/players-context'
+import type { PlayersMap } from '@/contexts/player-store/player-store'
 
 export function exportPlayers(players: PlayersMap) {
   const blob = new Blob([JSON.stringify(players)], { type: 'text/plain' })

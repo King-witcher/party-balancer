@@ -3,12 +3,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Player } from '@/types/player'
+import { PlayerRow } from '@/types/player'
 import { CircleCheck, CircleHelp } from 'lucide-react'
 import { ComponentProps } from 'react'
 
 type Props = ComponentProps<'div'> & {
-  player: Player
+  player: PlayerRow
 }
 
 export function PlayerCard({ player, ...rest }: Props) {

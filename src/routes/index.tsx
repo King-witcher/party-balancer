@@ -3,18 +3,29 @@ import { PlayersPanel } from '../components/panels/players'
 import { SimulatorPanel } from '../components/panels/simulator/simulator'
 import { BalancePanel } from '../components/panels/balance'
 import { useMatchBalancer } from '@/hooks/use-balancer'
-import { usePlayers } from '@/contexts/players-context'
 import { useState } from 'react'
 import { InspectorPanel } from '@/components/panels/inspector'
+import { JsonSerializer } from '@/lib/serialization/json-serializer'
+import z from 'zod'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
 })
 
+const ioSerializer = new JsonSerializer({
+  prettyPrint: true,
+  schema: z.array(
+    z.object({
+      name: z.string(),
+      k: z.number(),
+      score: z.number(),
+    })
+  ),
+})
+
 function RouteComponent() {
   const { blue, red, isFull, setPlayer, hardBalance, softBalance, shuffle } =
     useMatchBalancer()
-  const { playersMap: players } = usePlayers()
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null)
 
   const selectedPlayers = [...blue, ...red].filter((p) => p !== null)
@@ -32,10 +43,10 @@ function RouteComponent() {
       {/* Players list */}
       <div className="self-stretch shrink-0">
         <PlayersPanel
-          players={players}
           selectedPlayers={selectedPlayers}
           onDropFromTeam={handleDropOnSidebar}
           onSelectPlayer={(playerId) => setSelectedPlayerId(playerId)}
+          serializer={ioSerializer}
         />
       </div>
 

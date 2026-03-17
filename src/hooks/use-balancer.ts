@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { usePlayers } from '../contexts/players-context'
+import { usePlayerStore } from '@/contexts/player-store/player-store-context'
 
 export type Team = [
   string | null,
@@ -10,7 +10,7 @@ export type Team = [
 ]
 
 export function useMatchBalancer() {
-  const { playersMap: players } = usePlayers()
+  const playerStore = usePlayerStore()
 
   const [blue, setBlue] = useState<Team>([null, null, null, null, null])
   const [red, setRed] = useState<Team>([null, null, null, null, null])
@@ -41,11 +41,13 @@ export function useMatchBalancer() {
 
   function getDisparity(team1: Team, team2: Team) {
     const score1 = team1.reduce(
-      (sum, player) => sum + (player ? players[player].score : 0),
+      (sum, player) =>
+        sum + (player ? playerStore.playersMap[player].score : 0),
       0
     )
     const score2 = team2.reduce(
-      (sum, player) => sum + (player ? players[player].score : 0),
+      (sum, player) =>
+        sum + (player ? playerStore.playersMap[player].score : 0),
       0
     )
     return Math.abs(score1 - score2)

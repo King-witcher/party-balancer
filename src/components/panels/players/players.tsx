@@ -5,16 +5,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import type { PlayersMap } from '@/contexts/players-context'
-import { usePlayers } from '@/contexts/players-context'
 import { useMutation } from '@tanstack/react-query'
 import { Copy, Download, Search, Upload, UserPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { PlayerCard } from './player-card'
+import { usePlayerStore } from '@/contexts/player-store/player-store-context'
+import { ISerializer } from '@/lib/serialization'
+import { PlayerRow } from '@/types/player'
 
 interface Props {
-  players: PlayersMap
   selectedPlayers: string[]
   onDropFromTeam: (
     playerName: string,
@@ -22,21 +22,65 @@ interface Props {
     sourceIndex: number
   ) => void
   onSelectPlayer: (playerId: string) => void
+  serializer: ISerializer<PlayerRow[]>
+}
+
+async function importFile(ext: string): Promise<string> {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = ext
+  input.multiple = false
+
+  return new Promise((resolve, reject) => {
+    input.onchange = async () => {
+      const file = input.files?.[0]
+      if (!file) {
+        reject(new Error('No file selected'))
+        return
+      }
+      const text = await file.text()
+      resolve(text)
+    }
+
+    input.onabort = () => {
+      reject(new Error('File selection aborted'))
+    }
+
+    document.body.appendChild(input)
+    input.click()
+    document.body.removeChild(input)
+  })
+}
+
+function downloadFile(filename: string, content: string) {
+  const blob = new Blob([content], { type: 'text/plain' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 export function PlayersPanel({
-  players,
   selectedPlayers,
   onDropFromTeam,
   onSelectPlayer,
+  serializer,
 }: Props) {
-  const { importJSON, exportJSON, getList, addPlayer } = usePlayers()
+  const playerStore = usePlayerStore()
   const [isDragOver, setIsDragOver] = useState(false)
   const [search, setSearch] = useState('')
 
   const importMutation = useMutation({
     mutationKey: ['import-players'],
-    mutationFn: importJSON,
+    async mutationFn(serializer: ISerializer<PlayerRow[]>) {
+      const file = await importFile('.json')
+      const importedPlayers = serializer.deserialize(file)
+      playerStore.import(importedPlayers)
+    },
     onSuccess: () => {
       toast.success('Jogadores importados com sucesso!', { closeButton: true })
     },
@@ -47,23 +91,34 @@ export function PlayersPanel({
     },
   })
 
+  function exportPlayers() {
+    const data = serializer.serialize(playerStore.playersList)
+    downloadFile('players.json', data)
+  }
+
   function handleAddPlayer() {
     if (!search.trim()) return
-    addPlayer(search.trim())
+    playerStore.create({ name: search.trim(), score: 0, k: 0 })
     toast.success(`Jogador "${search.trim()}" adicionado!`, {
       closeButton: true,
     })
     setSearch('')
   }
 
-  function copyRankings() {
-    const rankings = getList()
-    navigator.clipboard.writeText(rankings)
+  function copyRanking() {
+    const unsorted = playerStore.playersList
+    const sorted = unsorted.sort((a, b) => b.score - a.score)
+    const lines = sorted.map(
+      (current, index) =>
+        `#${index + 1}: ${current.name} - ${Math.round(current.score)}${current.k > 90 ? ' (?)' : ''}`
+    )
+    const text = lines.join('\n')
+    navigator.clipboard.writeText(text)
     toast.success('Rankings copiados!', { closeButton: true })
   }
 
   const availablePlayers = useMemo(() => {
-    const filtered = Object.values(players)
+    const filtered = playerStore.playersList
       .filter((p) => !selectedPlayers.includes(p.name))
       .sort((a, b) => {
         const aImprecise = a.k > 90 ? 1 : 0
@@ -75,7 +130,7 @@ export function PlayersPanel({
     if (!search.trim()) return filtered
     const query = search.toLowerCase()
     return filtered.filter((p) => p.name.toLowerCase().includes(query))
-  }, [players, selectedPlayers, search])
+  }, [playerStore.playersList, selectedPlayers, search])
 
   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault()
@@ -120,7 +175,7 @@ export function PlayersPanel({
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6"
-                onClick={() => importMutation.mutate()}
+                onClick={() => importMutation.mutate(serializer)}
               >
                 <Download size={14} />
               </Button>
@@ -134,7 +189,7 @@ export function PlayersPanel({
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6"
-                onClick={exportJSON}
+                onClick={exportPlayers}
               >
                 <Upload size={14} />
               </Button>
@@ -148,7 +203,7 @@ export function PlayersPanel({
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6"
-                onClick={copyRankings}
+                onClick={copyRanking}
               >
                 <Copy size={14} />
               </Button>
@@ -193,7 +248,7 @@ export function PlayersPanel({
       <div className="flex-1 overflow-y-auto flex flex-col gap-2 min-h-0">
         {availablePlayers.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center py-4">
-            {Object.keys(players).length === 0
+            {playerStore.playersList.length === 0
               ? 'No players created yet'
               : search.trim()
                 ? 'No players match your search'

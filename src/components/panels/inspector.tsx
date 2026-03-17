@@ -4,13 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Trash2, Save, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { usePlayers } from '@/contexts/players-context'
 import { toast } from 'sonner'
 import { Panel } from '../panel'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Button } from '../ui/button'
+import { usePlayerStore } from '@/contexts/player-store/player-store-context'
 
 const playerSchema = z.object({
   name: z.string().min(1, 'Name is required').trim(),
@@ -33,8 +33,10 @@ export function InspectorPanel({
   onPlayerUpdated,
   ...rest
 }: Props) {
-  const { playersMap, updatePlayer, removePlayer } = usePlayers()
-  const selectedPlayer = selectedPlayerId ? playersMap[selectedPlayerId] : null
+  const playerStore = usePlayerStore()
+  const selectedPlayer = selectedPlayerId
+    ? playerStore.playersMap[selectedPlayerId]
+    : null
 
   const {
     register,
@@ -63,7 +65,7 @@ export function InspectorPanel({
   function onSubmit(data: PlayerFormData) {
     if (!selectedPlayerId) return
 
-    updatePlayer(selectedPlayerId, {
+    playerStore.update(selectedPlayerId, {
       name: data.name,
       score: data.score,
       k: data.k,
@@ -76,7 +78,7 @@ export function InspectorPanel({
   function handleDelete() {
     if (!selectedPlayerId) return
 
-    removePlayer(selectedPlayerId)
+    playerStore.delete(selectedPlayerId)
     toast.success(`"${selectedPlayerId}" foi removido.`)
     onPlayerDeleted?.()
   }

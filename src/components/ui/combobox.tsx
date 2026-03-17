@@ -47,10 +47,10 @@ export function Combobox({
     if (e.key !== 'Enter') return
     const trimmed = inputValue.trim()
     if (!trimmed) return
-    const exists = options.some(
-      (o) => o.label.toLowerCase() === trimmed.toLowerCase()
+    const hasAnyMatch = options.some((o) =>
+      o.label.toLowerCase().includes(trimmed.toLowerCase())
     )
-    if (!exists && onCreateOption) {
+    if (!hasAnyMatch && onCreateOption) {
       onCreateOption(trimmed)
       setOpen(false)
       setInputValue('')
@@ -85,8 +85,8 @@ export function Combobox({
           />
           <CommandList>
             {inputValue.trim() &&
-              !options.some(
-                (o) => o.label.toLowerCase() === inputValue.trim().toLowerCase()
+              !options.some((o) =>
+                o.label.toLowerCase().includes(inputValue.trim().toLowerCase())
               ) && (
                 <CommandItem
                   value={`__create__${inputValue}`}
