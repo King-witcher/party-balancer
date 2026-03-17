@@ -23,7 +23,7 @@ const v2Schema = z.object({
   ),
 })
 
-type SerializedV1 = z.infer<typeof v1Schema>
+// type SerializedV1 = z.infer<typeof v1Schema>
 type SerializedV2 = z.infer<typeof v2Schema>
 
 export class VersionedSerializer implements ISerializer<PlayerRow[]> {
