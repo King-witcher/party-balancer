@@ -9,7 +9,7 @@ export const RatingSystemContext = createContext<IRatingSystem<DynamicKRating>>(
   new DynamicKSystem({
     initialK: 120,
     initialPower: 1500,
-    kDecayFactor: 0.1,
+    kDecayFactor: 0.15,
     leastKValue: 32,
     kThreshold: 90,
   })
