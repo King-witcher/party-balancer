@@ -35,7 +35,9 @@ export function PlayerCard({ player, ...rest }: Props) {
     >
       <span className="text-sm font-medium truncate">{player.name}</span>
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className={`text-xs font-semibold tabular-nums ${getScoreColor(player.score)}`}>
+        <span
+          className={`text-xs font-semibold tabular-nums ${getScoreColor(player.score)}`}
+        >
           {Math.round(player.score)}
         </span>
         <Tooltip>
