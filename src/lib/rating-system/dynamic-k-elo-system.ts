@@ -74,7 +74,10 @@ export class DynamicKSystem implements IRatingSystem<DynamicKRating> {
   }
 
   private decayKFactor(currentK: number): number {
-    return currentK
+    const diff = currentK - this.config.leastKValue
+    const decayedDiff = diff * this.config.kDecayFactor
+    const newK = this.config.leastKValue + decayedDiff
+    return Math.max(newK, this.config.leastKValue)
   }
 
   private assertTeamsValid(first: DynamicKRating[], second: DynamicKRating[]) {
