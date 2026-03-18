@@ -120,12 +120,7 @@ export function PlayersPanel({
   const availablePlayers = useMemo(() => {
     const filtered = playerStore.playersList
       .filter((p) => !selectedPlayers.includes(p.name))
-      .sort((a, b) => {
-        const aImprecise = a.k > 90 ? 1 : 0
-        const bImprecise = b.k > 90 ? 1 : 0
-        if (aImprecise !== bImprecise) return aImprecise - bImprecise
-        return b.score - a.score
-      })
+      .sort((a, b) => b.score - a.score)
 
     if (!search.trim()) return filtered
     const query = search.toLowerCase()

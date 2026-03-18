@@ -4,6 +4,14 @@ import { useRatingSystem } from '@/contexts/rating-system-context'
 import { Team } from '@/hooks/use-balancer'
 import { useMemo } from 'react'
 
+function getScoreColor(score: number): string {
+  if (score > 1700) return 'text-red-500'
+  if (score > 1650) return 'text-orange-400'
+  if (score > 1600) return 'text-yellow-400'
+  if (score < 1400) return 'text-amber-900'
+  return 'text-foreground/80'
+}
+
 interface Props {
   teamPlayers: Team
   team: 'blue' | 'red'
@@ -112,7 +120,9 @@ export function SimulatorTeam({
               }}
               onChange={(value) => handleChangeSelect(team, index, value)}
             />
-            <span className="w-[40px] font-semibold text-end">
+            <span
+              className={`w-[40px] font-semibold text-end ${currentPlayer ? getScoreColor(currentPlayer.score) : ''}`}
+            >
               {currentPlayer ? Math.round(currentPlayer.score) : ''}
             </span>
           </div>

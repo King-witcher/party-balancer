@@ -11,6 +11,14 @@ type Props = ComponentProps<'div'> & {
   player: PlayerRow
 }
 
+function getScoreColor(score: number): string {
+  if (score > 1700) return 'text-red-500'
+  if (score > 1650) return 'text-orange-400'
+  if (score > 1600) return 'text-yellow-400'
+  if (score < 1400) return 'text-amber-900'
+  return 'text-muted-foreground'
+}
+
 export function PlayerCard({ player, ...rest }: Props) {
   const imprecise = player.k > 90
 
@@ -27,7 +35,7 @@ export function PlayerCard({ player, ...rest }: Props) {
     >
       <span className="text-sm font-medium truncate">{player.name}</span>
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-xs text-muted-foreground font-semibold tabular-nums">
+        <span className={`text-xs font-semibold tabular-nums ${getScoreColor(player.score)}`}>
           {Math.round(player.score)}
         </span>
         <Tooltip>
