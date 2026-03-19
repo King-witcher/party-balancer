@@ -6,13 +6,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useMutation } from '@tanstack/react-query'
-import { Copy, Download, Search, Upload, UserPlus } from 'lucide-react'
+import { Copy, Download, Scale, Search, Upload, UserPlus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { PlayerCard } from './player-card'
 import { usePlayerStore } from '@/contexts/player-store/player-store-context'
 import { ISerializer } from '@/lib/serialization'
 import { PlayerRow } from '@/types/player'
+import { useRatingSystem } from '@/contexts/rating-system-context'
 
 interface Props {
   selectedPlayers: string[]
@@ -71,6 +72,7 @@ export function PlayersPanel({
   serializer,
 }: Props) {
   const playerStore = usePlayerStore()
+  const ratingSystem = useRatingSystem()
   const [isDragOver, setIsDragOver] = useState(false)
   const [search, setSearch] = useState('')
 
@@ -103,6 +105,26 @@ export function PlayersPanel({
       closeButton: true,
     })
     setSearch('')
+  }
+
+  function normalize() {
+    const averageScore =
+      playerStore.playersList.reduce((sum, p) => sum + p.score, 0) /
+      playerStore.playersList.length
+
+    const diff = averageScore - ratingSystem.initialScore
+    const normalized = playerStore.playersList.map((p) => ({
+      ...p,
+      score: p.score - diff,
+    }))
+
+    playerStore.import(normalized)
+    toast.success(
+      `Pontuações normalizadas. Diferença aplicada: ${diff.toFixed(2)}.`,
+      {
+        closeButton: true,
+      }
+    )
   }
 
   function copyRanking() {
@@ -163,6 +185,22 @@ export function PlayersPanel({
           Jogadores
         </h3>
         <div className="flex gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={normalize}
+              >
+                <Scale size={14} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Normalizar as pontuações para manter a média em 1500
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

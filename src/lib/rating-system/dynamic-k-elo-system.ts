@@ -93,4 +93,8 @@ export class DynamicKSystem implements IRatingSystem<DynamicKRating> {
   private expectedScore(playerPower: number, opponentPower: number): number {
     return 1 / (1 + 10 ** ((opponentPower - playerPower) / 400))
   }
+
+  get initialScore(): number {
+    return this.config.initialPower
+  }
 }

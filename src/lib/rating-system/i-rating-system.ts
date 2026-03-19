@@ -1,4 +1,6 @@
 export interface IRatingSystem<TRating> {
+  initialScore: number
+
   expectedTeams(first: TRating[], second: TRating[]): number
 
   computeTeams(
