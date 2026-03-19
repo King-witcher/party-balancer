@@ -46,6 +46,7 @@ export function useComputeResult() {
           ...player,
           score: newRating.power,
           k: newRating.kFactor,
+          date: new Date(),
         })
       }),
 
@@ -57,6 +58,7 @@ export function useComputeResult() {
           ...player,
           score: newRating.power,
           k: newRating.kFactor,
+          date: new Date(),
         })
       }),
     ])

@@ -19,7 +19,7 @@ export const Route = createRootRoute({
       <LocalStoragePlayerStoreProvider serializer={storeSerializer}>
         <Outlet />
       </LocalStoragePlayerStoreProvider>
-      <Toaster />
+      <Toaster position="bottom-center" />
     </QueryClientProvider>
   ),
 })

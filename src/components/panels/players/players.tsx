@@ -100,7 +100,12 @@ export function PlayersPanel({
 
   function handleAddPlayer() {
     if (!search.trim()) return
-    playerStore.create({ name: search.trim(), score: 0, k: 0 })
+    playerStore.create({
+      name: search.trim(),
+      score: 0,
+      k: 0,
+      date: new Date(),
+    })
     toast.success(`Jogador "${search.trim()}" adicionado!`, {
       closeButton: true,
     })

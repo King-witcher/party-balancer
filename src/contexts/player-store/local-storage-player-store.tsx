@@ -17,6 +17,7 @@ const playerSchema = z.object({
   name: z.string(),
   k: z.number(),
   score: z.number(),
+  date: z.date(),
 })
 
 const schema = z.array(playerSchema)

@@ -23,8 +23,23 @@ const v2Schema = z.object({
   ),
 })
 
+const v3schema = z.object({
+  v: z.literal(3),
+  d: z.array(
+    z.tuple([
+      z.string(), // Name
+      z.number(), // Score
+      z.number(), // K
+      z.number(), // Date
+    ])
+  ),
+})
+
+const EPOCH = new Date(2026, 2, 1)
+const ONE_DAY = 24 * 60 * 60 * 1000
+
 // type SerializedV1 = z.infer<typeof v1Schema>
-type SerializedV2 = z.infer<typeof v2Schema>
+type SerializedV3 = z.infer<typeof v3schema>
 
 export class VersionedSerializer implements ISerializer<PlayerRow[]> {
   private decoree: ISerializer<unknown>
@@ -35,6 +50,19 @@ export class VersionedSerializer implements ISerializer<PlayerRow[]> {
 
   deserialize(serializedData: string): PlayerRow[] {
     const parsed = this.decoree.deserialize(serializedData)
+
+    const parsedV3 = v3schema.safeParse(parsed)
+    if (parsedV3.success) {
+      return parsedV3.data.d.map(
+        ([name, score, k, timestamp]): PlayerRow => ({
+          name,
+          score,
+          k,
+          date: this.toDate(timestamp),
+        })
+      )
+    }
+
     const parsedV2 = v2Schema.safeParse(parsed)
     if (parsedV2.success) {
       return parsedV2.data.d.map(
@@ -42,28 +70,41 @@ export class VersionedSerializer implements ISerializer<PlayerRow[]> {
           name,
           score: raing,
           k,
+          date: new Date(),
         })
       )
     }
     const parsedV1 = v1Schema.safeParse(parsed)
     if (parsedV1.success) {
-      return Object.values(parsedV1.data)
+      return Object.values(parsedV1.data).map((p) => ({
+        ...p,
+        date: new Date(),
+      }))
     }
     throw new Error('No version matches serialized data')
   }
 
   serialize(data: PlayerRow[]): string {
-    const rouned = data.map((p): SerializedV2['d'][number] => [
+    const rows = data.map((p): SerializedV3['d'][number] => [
       p.name,
       Math.round(p.score),
       Math.round(p.k),
+      this.toTimestamp(p.date),
     ])
 
-    const toSerialize: SerializedV2 = {
-      v: 2,
-      d: rouned,
+    const toSerialize: SerializedV3 = {
+      v: 3,
+      d: rows,
     }
 
     return this.decoree.serialize(toSerialize)
+  }
+
+  private toDate(timestamp: number): Date {
+    return new Date(EPOCH.getTime() + timestamp * ONE_DAY)
+  }
+
+  private toTimestamp(date: Date): number {
+    return Math.floor((date.getTime() - EPOCH.getTime()) / ONE_DAY)
   }
 }
