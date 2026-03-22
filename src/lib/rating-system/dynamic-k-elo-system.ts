@@ -21,7 +21,7 @@ export class DynamicKSystem implements IRatingSystem<DynamicKRating> {
   }
 
   isCalibrated(rating: DynamicKRating): boolean {
-    return rating.kFactor < 90
+    return rating.kFactor < 70
   }
 
   getInitialRating(): DynamicKRating {

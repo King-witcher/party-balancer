@@ -7,11 +7,11 @@ import { createContext, use } from 'react'
 
 export const RatingSystemContext = createContext<IRatingSystem<DynamicKRating>>(
   new DynamicKSystem({
-    initialK: 120,
+    initialK: 90,
     initialPower: 1500,
-    kDecayFactor: 0.15,
+    kDecayFactor: 0.13,
     leastKValue: 32,
-    kThreshold: 90,
+    kThreshold: 45,
   })
 )
 
