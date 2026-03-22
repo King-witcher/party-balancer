@@ -100,10 +100,12 @@ export function PlayersPanel({
 
   function handleAddPlayer() {
     if (!search.trim()) return
+
+    const initialRating = ratingSystem.getInitialRating()
     playerStore.create({
       name: search.trim(),
-      score: 0,
-      k: 0,
+      score: initialRating.power,
+      k: initialRating.kFactor,
       date: new Date(),
     })
     toast.success(`Jogador "${search.trim()}" adicionado!`, {

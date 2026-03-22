@@ -104,6 +104,7 @@ export function SimulatorTeam({
                   name,
                   score: initialRating.power,
                   k: initialRating.kFactor,
+                  date: new Date(),
                 })
                 setPlayer(team, index, name)
               }}
