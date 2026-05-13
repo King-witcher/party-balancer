@@ -72,7 +72,7 @@ export function Combobox({
         >
           {value
             ? (options.find((option) => option.id === value)?.label ?? value)
-            : 'Selecionar jogador...'}
+            : 'Digite um nome...'}
           <ChevronsUpDown />
         </Button>
       </PopoverTrigger>

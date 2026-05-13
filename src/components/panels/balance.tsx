@@ -71,7 +71,7 @@ export function BalancePanel({
 
       {blue.some((p) => p === null) || red.some((p) => p === null) ? (
         <div className="text-center text-muted-foreground py-2">
-          Selecione todos os jogadores para ver a probabilidade de vitória
+          Selecione todos os jogadores para sortear ou balancear as equipes
         </div>
       ) : (
         <div className="flex items-center">

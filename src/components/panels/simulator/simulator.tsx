@@ -2,6 +2,7 @@ import { Team } from '@/hooks/use-balancer'
 import { Crosshair, Flame, ShieldPlus, Swords, TreePine } from 'lucide-react'
 import { SimulatorTeam } from './team'
 import { Panel } from '@/components/panel'
+import { AiTeamBuilder } from './ai-team-builder'
 
 export const ROLES = [
   { name: 'Top', icon: Swords },
@@ -33,6 +34,10 @@ export function SimulatorPanel({
 }: Props) {
   return (
     <Panel className="flex flex-col gap-6 p-6 w-fit">
+      <div className="flex justify-end">
+        <AiTeamBuilder setPlayer={setPlayer} />
+      </div>
+
       {/* Teams grid: Blue | Roles | Red */}
       <div className="flex gap-4 justify-center items-start">
         {/* Blue team header + players */}
