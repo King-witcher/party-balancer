@@ -1,4 +1,12 @@
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import {
   Tooltip,
@@ -6,7 +14,15 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useMutation } from '@tanstack/react-query'
-import { Copy, Download, Scale, Search, Upload, UserPlus } from 'lucide-react'
+import {
+  Copy,
+  Download,
+  Scale,
+  Search,
+  Trash2,
+  Upload,
+  UserPlus,
+} from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { PlayerCard } from './player-card'
@@ -75,6 +91,7 @@ export function PlayersPanel({
   const ratingSystem = useRatingSystem()
   const [isDragOver, setIsDragOver] = useState(false)
   const [search, setSearch] = useState('')
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false)
 
   const importMutation = useMutation({
     mutationKey: ['import-players'],
@@ -132,6 +149,12 @@ export function PlayersPanel({
         closeButton: true,
       }
     )
+  }
+
+  function handleClearAll() {
+    playerStore.import([])
+    setIsClearDialogOpen(false)
+    toast.success('Todos os jogadores foram removidos.', { closeButton: true })
   }
 
   function copyRanking() {
@@ -250,8 +273,52 @@ export function PlayersPanel({
             </TooltipTrigger>
             <TooltipContent>Copiar rankings</TooltipContent>
           </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-destructive hover:text-destructive"
+                disabled={playerStore.playersList.length === 0}
+                onClick={() => setIsClearDialogOpen(true)}
+              >
+                <Trash2 size={14} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Limpar jogadores</TooltipContent>
+          </Tooltip>
         </div>
       </div>
+
+      <Dialog open={isClearDialogOpen} onOpenChange={setIsClearDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Limpar todos os jogadores?</DialogTitle>
+            <DialogDescription>
+              Esta ação removerá permanentemente todos os{' '}
+              {playerStore.playersList.length} jogadores cadastrados. Não é
+              possível desfazer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setIsClearDialogOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleClearAll}
+            >
+              Limpar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="flex gap-1">
         <div className="relative flex-1">
